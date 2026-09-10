@@ -104,7 +104,7 @@ SWMA 코드는 Bit2Watt persistent kernel의 동일 재현이 아니라, PyTorch
 | `pipeline/run_pipeline.py` | 전체 오케스트레이션 (+ 선택 `--physics-validate` 이벤트 트리거) |
 | `pipeline/physics_correlation.py` | **§8 실험 전용**: 고정 시나리오 Physics CSV와 cyber JSON을 `attack_id`로 사후 결합(운영 트리거 아님) |
 | `dataset/` | 공통 스키마, 합성 데이터, 캡처·평가 도구 |
-| `bit2watt_impl/physics/` | 공개 Kundur/WECC 계통에서의 동적 응답 검증 |
+| `bit2watt_impl/physics/` | 공개 Kundur/WECC 동적 응답 + WECC IBR(교체) 침투율 스윕 |
 | `bit2watt_impl/` | NVML 수집과 SWMA/LTMA-like 검증 워크로드 |
 | `workloads/` | 정상 PyTorch hard-negative 워크로드 |
 
@@ -145,9 +145,9 @@ SWMA 코드는 Bit2Watt persistent kernel의 동일 재현이 아니라, PyTorch
 
 ## Physics Tier B — 공개 동적 테스트 계통 검증
 
-Cyber Stage 1은 GPU 텔레메트리 후보 선별이다. Physics Tier B에는 두 모드가 있다.
+Cyber Stage 1은 GPU 텔레메트리 후보 선별이다. Physics Tier B에는 세 갈래가 있다.
 
-### 운영 모드 (이벤트 트리거, 권장)
+### 운영 모드 (이벤트 트리거)
 
 Stage 1이 후보로 잡은 **바로 그 윈도우**의 관측 `power(t)`를 공개 테스트계통에
 온디맨드로 재생한다. 사후 `attack_id` 매칭이 아니라, 한 번의
@@ -162,6 +162,23 @@ python pipeline/run_pipeline.py \
   --physics-validate --physics-timeout-s 60 \
   --out dataset/eval/cyber_physics_ops.json
 ```
+
+### IBR 침투율 스윕 (교체, WECC)
+
+소량 IBR **추가**는 용량 비중이 무시할 수준(~0.01%)이라 폐기한다. 대신 공개
+WECC 179 GENCLS 동기기를 Sn 내림차순으로 REGCA1(+REECA1)로 **교체**해 용량 기준
+침투율(0/30/50/70%)과 관성(`M` 합) 감소를 만든 뒤, 공격 주파수 × 침투율 2D
+응답을 본다. KPG-193(Tier A)과 섞어 서술하지 않는다.
+
+```bash
+source .venv-physics/bin/activate
+python -m bit2watt_impl.physics.ibr_baseline
+python -m bit2watt_impl.physics.ibr_frequency_sweep
+```
+
+산출: `dataset/eval/ibr_penetration_baseline.csv`,
+`ibr_frequency_2d_sweep.csv`, heatmap/overlay PNG, summary JSON.
+고침투율에서 PQ 공격 TDS가 실패하면 해당 칸은 `converged=false`로 남긴다.
 
 ### §8 연구 실험 모드 (고정 시나리오 + 스윕)
 
@@ -186,7 +203,7 @@ python -m bit2watt_impl.physics.stage1_kundur
 # Phase 2: Kundur 0.1~1.45 Hz 스윕
 python -m bit2watt_impl.physics.frequency_sweep
 
-# Phase 3: WECC smoke 후 주파수 스윕
+# Phase 3: WECC smoke 후 주파수 스윕 (IBR 교체 없음)
 python -m bit2watt_impl.physics.stage3_wecc
 ```
 

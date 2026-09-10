@@ -1,0 +1,5 @@
+test_system,scope,target_penetration,achieved_penetration,replaced_count,inertia_before,inertia_after,inertia_reduction_frac,pflow_ok,tds_ok,f_hz,t_reached_s,failure_reason,replaced_idx
+wecc_179_gencls,public dynamic test system; not a real regional grid,0.0,0.0,0,8375.75,8375.75,0.0,True,True,60.0,3.0,,
+wecc_179_gencls,public dynamic test system; not a real regional grid,0.3,0.3198830884143866,3,8375.75,5697.39,0.3197755424887323,True,True,60.0,3.0,,"GENCLS_18,GENCLS_17,GENCLS_9"
+wecc_179_gencls,public dynamic test system; not a real regional grid,0.5,0.5001217829016806,6,8375.75,4036.7500000000005,0.5180431603140018,True,True,60.0,3.0,,"GENCLS_18,GENCLS_17,GENCLS_9,GENCLS_8,GENCLS_22,GENCLS_24"
+wecc_179_gencls,public dynamic test system; not a real regional grid,0.7,0.7233904359827881,12,8375.75,2269.6699999999996,0.7290188938304032,True,True,59.66801610819935,3.0,,"GENCLS_18,GENCLS_17,GENCLS_9,GENCLS_8,GENCLS_22,GENCLS_24,GENCLS_15,GENCLS_6,GENCLS_27,GENCLS_3,GENCLS_4,GENCLS_13"

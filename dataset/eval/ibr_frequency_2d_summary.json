@@ -1,0 +1,58 @@
+{
+  "test_system": "wecc_179_gencls",
+  "scope": "public dynamic test system; not a real regional grid",
+  "method": "capacity-ranked GENCLS→REGCA1+REECA1 replacement; PQ.Ppf square-wave injection",
+  "amplitude_frac_note": "Default attack amplitude is 0.02 (not 0.10): on this public WECC+REGCA1 case, ±10% PQ.Ppf square waves routinely bust TDS after SG→IBR replacement.",
+  "penetrations_requested": [
+    0.0,
+    0.3,
+    0.5,
+    0.7
+  ],
+  "runs": 60,
+  "converged": 30,
+  "by_penetration": {
+    "0.00": {
+      "runs": 15,
+      "converged": 15,
+      "mean_osc_std": 0.0003744503373818533,
+      "mean_rocof_hz_s": 0.23820126174373255,
+      "inertia_after": 8375.75
+    },
+    "0.30": {
+      "runs": 15,
+      "converged": 15,
+      "mean_osc_std": 0.0005467255383879867,
+      "mean_rocof_hz_s": 0.51489954890679,
+      "inertia_after": 5697.39
+    },
+    "0.50": {
+      "runs": 15,
+      "converged": 0,
+      "mean_osc_std": null,
+      "mean_rocof_hz_s": null,
+      "inertia_after": null
+    },
+    "0.70": {
+      "runs": 15,
+      "converged": 0,
+      "mean_osc_std": null,
+      "mean_rocof_hz_s": null,
+      "inertia_after": null
+    }
+  },
+  "penetration_vs_mean_osc_std": {
+    "0.00": 0.0003744503373818533,
+    "0.30": 0.0005467255383879867
+  },
+  "spearman_penetration_osc_std": null,
+  "response_increases_with_penetration": true,
+  "interpretation": "Only 2 IBR levels produced converged attack runs on this public WECC case, so the penetration trend is descriptive only (mean osc_std slope=positive). Attack-TDS failed for target penetrations [0.5, 0.7] (idle baseline may still have passed); those levels are excluded from the response trend.",
+  "convergence_rate": 0.5,
+  "comparable_penetration_levels": 2,
+  "attack_tds_failed_penetrations": [
+    0.5,
+    0.7
+  ],
+  "mean_osc_std_vs_penetration_slope": 0.0005742506700204442
+}

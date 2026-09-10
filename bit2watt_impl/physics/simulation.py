@@ -69,14 +69,39 @@ def build_kundur_system() -> Any:
 
 
 def build_wecc_system() -> Any:
+    return build_wecc_system_at_penetration(0.0)
+
+
+def build_wecc_system_at_penetration(
+    penetration: float,
+    *,
+    require_pflow: bool = True,
+) -> Any:
+    """Load public WECC 179 GENCLS and optionally replace SGs with REGCA1.
+
+    ``penetration`` is capacity fraction (Sn). Replacement happens before setup.
+    Attaches ``_gridpulse_ibr_meta`` on the System for downstream logging.
+    """
+    from bit2watt_impl.physics.ibr_penetration import (
+        finalize_inertia_meta,
+        replace_sg_with_ibr,
+    )
+
     andes = _import_andes()
     raw = andes.get_case("wecc/wecc.raw")
     dyr = andes.get_case("wecc/wecc_gencls.dyr")
     ss = andes.load(raw, addfile=dyr, setup=False, no_output=True)
-    _configure_constant_power(ss)
+    meta = replace_sg_with_ibr(ss, float(penetration))
     ss.setup()
-    if not ss.PFlow.run():
-        raise RuntimeError("WECC 179 power flow did not converge")
+    meta = finalize_inertia_meta(ss, meta)
+    ss._gridpulse_ibr_meta = meta
+    _configure_constant_power(ss)
+    pflow_ok = bool(ss.PFlow.run())
+    ss._gridpulse_pflow_ok = pflow_ok
+    if require_pflow and not pflow_ok:
+        raise RuntimeError(
+            f"WECC 179 power flow did not converge at IBR penetration={penetration}"
+        )
     return ss
 
 
