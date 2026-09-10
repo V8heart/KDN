@@ -1,13 +1,35 @@
 from __future__ import annotations
 
 from argparse import Namespace
+from unittest.mock import patch
 
 import numpy as np
 import pandas as pd
 
+from bit2watt_impl.physics.simulation import power_series_to_relative_events
 from dataset.synth_attacks import cryptojacking, swma
 from pipeline.features import compute_window_features
 from pipeline.run_pipeline import run, stage1_screen
+
+
+def _base_run_args(**overrides):
+    args = dict(
+        telemetry="",
+        baseline_mean=120.0,
+        sample_hz=None,
+        window=200,
+        stride=100,
+        z_threshold=2.5,
+        rag_backend="tfidf",
+        llm_backend="stub",
+        llm_model="unused",
+        physics_validate=False,
+        physics_timeout_s=60.0,
+        physics_test_system="kundur_ieeest",
+        out=None,
+    )
+    args.update(overrides)
+    return Namespace(**args)
 
 
 def test_feature_masks_keep_util_aligned():
@@ -52,20 +74,7 @@ def test_schema_groups_prevent_cross_session_windows():
 def test_pipeline_emits_tier_b_join_fields(tmp_path, capsys):
     telemetry = tmp_path / "swma.csv"
     swma(n=400).to_csv(telemetry, index=False)
-    results = run(
-        Namespace(
-            telemetry=str(telemetry),
-            baseline_mean=120.0,
-            sample_hz=None,
-            window=200,
-            stride=100,
-            z_threshold=2.5,
-            rag_backend="tfidf",
-            llm_backend="stub",
-            llm_model="unused",
-            out=None,
-        )
-    )
+    results = run(_base_run_args(telemetry=str(telemetry)))
     capsys.readouterr()
     assert results
     result = results[0]
@@ -74,4 +83,87 @@ def test_pipeline_emits_tier_b_join_fields(tmp_path, capsys):
     assert result["threat_id"] == result["verdict"]["closest_match"]
     assert 0 <= result["anomaly_score"] <= 1
     assert result["score_version"] == "cyber-stage1-or-v1"
+    assert "physics_osc_std" not in result
 
+
+def test_power_series_to_relative_events_clips_and_downsamples():
+    t = np.arange(40) / 10.0
+    power = 200.0 + 80.0 * np.sin(2 * np.pi * 0.5 * t)
+    events, meta = power_series_to_relative_events(
+        power, sample_hz=10.0, max_amp_frac=0.15, min_interval_s=0.1
+    )
+    assert meta["peak_raw_delta"] > 0.15
+    assert meta["amp_scale"] < 1.0
+    assert all(abs(delta) <= 0.15 + 1e-9 for _, delta in events)
+    assert len(events) < len(power)
+    assert events[-1][1] == 0.0
+
+
+def test_pipeline_physics_validate_fills_fields(tmp_path, capsys):
+    telemetry = tmp_path / "swma_small.csv"
+    swma(n=220).to_csv(telemetry, index=False)
+    fake = {
+        "test_system": "kundur_ieeest",
+        "mode": "observed_waveform_replay",
+        "converged": True,
+        "failure_reason": "",
+        "osc_std": 0.0123,
+        "rocof_hz_s": 0.0456,
+        "dominant_freq_hz": 0.5,
+        "osc_ptp": 0.03,
+    }
+    with patch(
+        "bit2watt_impl.physics.simulation.inject_observed_waveform_with_timeout",
+        return_value=fake,
+    ) as mocked:
+        results = run(
+            _base_run_args(
+                telemetry=str(telemetry),
+                window=200,
+                stride=200,
+                physics_validate=True,
+                physics_timeout_s=5.0,
+            )
+        )
+    capsys.readouterr()
+    assert mocked.called
+    assert results
+    result = results[0]
+    assert "verdict" in result
+    assert result["physics_converged"] is True
+    assert result["physics_osc_std"] == 0.0123
+    assert result["physics_rocof_hz_s"] == 0.0456
+    assert result["physics_dominant_freq_hz"] == 0.5
+    assert result["physics_osc_ptp"] == 0.03
+    assert result["physics_mode"] == "observed_waveform_replay"
+
+
+def test_pipeline_physics_failure_does_not_abort(tmp_path, capsys):
+    telemetry = tmp_path / "swma_fail.csv"
+    swma(n=220).to_csv(telemetry, index=False)
+    fake = {
+        "test_system": "kundur_ieeest",
+        "mode": "observed_waveform_replay",
+        "converged": False,
+        "failure_reason": "TDS entered busted state; fresh replay required",
+        "osc_std": None,
+        "rocof_hz_s": None,
+        "dominant_freq_hz": None,
+        "osc_ptp": None,
+    }
+    with patch(
+        "bit2watt_impl.physics.simulation.inject_observed_waveform_with_timeout",
+        return_value=fake,
+    ):
+        results = run(
+            _base_run_args(
+                telemetry=str(telemetry),
+                window=200,
+                stride=200,
+                physics_validate=True,
+            )
+        )
+    capsys.readouterr()
+    assert results[0]["physics_converged"] is False
+    assert results[0]["physics_osc_std"] is None
+    assert results[0]["verdict"]

@@ -26,6 +26,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+ROOT = Path(__file__).resolve().parent.parent
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(Path(__file__).parent))
 from features import compute_window_features, features_to_description
 from rag_analyzer import SignatureRetriever, analyze_with_llm
@@ -265,7 +268,7 @@ def run(args):
             baseline_mean_w=baseline,
         )
 
-        results.append({
+        row = {
             "session_id": str(cand["session_id"]),
             "attack_id": attack_id,
             "window_id": (
@@ -286,7 +289,35 @@ def run(args):
             "score_components": {key: round(value, 5) for key, value in components.items()},
             "score_version": "cyber-stage1-or-v1",
             "verdict": verdict,
-        })
+        }
+
+        # Ops mode: event-triggered physics validation on Stage-1 candidates only.
+        if getattr(args, "physics_validate", False):
+            from bit2watt_impl.physics.simulation import (
+                inject_observed_waveform_with_timeout,
+            )
+
+            physics = inject_observed_waveform_with_timeout(
+                power,
+                float(cand["sample_hz"]),
+                timeout_s=float(getattr(args, "physics_timeout_s", 60.0)),
+                test_system=str(getattr(args, "physics_test_system", "kundur_ieeest")),
+            )
+            row["physics_converged"] = bool(physics.get("converged"))
+            row["physics_failure_reason"] = physics.get("failure_reason") or ""
+            row["physics_test_system"] = physics.get("test_system")
+            row["physics_mode"] = physics.get("mode", "observed_waveform_replay")
+            for key in ("osc_std", "rocof_hz_s", "dominant_freq_hz", "osc_ptp"):
+                value = physics.get(key)
+                row[f"physics_{key}"] = (
+                    None if value is None else round(float(value), 8)
+                )
+            print(
+                f"  [physics] {row['window_id']} converged={row['physics_converged']} "
+                f"osc_std={row['physics_osc_std']} rocof={row['physics_rocof_hz_s']}"
+            )
+
+        results.append(row)
 
     print(f"\n[결과] 의심 후보 {len(results)}개 분석 완료:\n")
     for r in results:
@@ -319,6 +350,27 @@ def main():
     ap.add_argument("--llm-backend", choices=["ollama", "stub"], default="stub")
     ap.add_argument("--llm-model", default="gemma3:12b",
                      help="Ollama 모델명 (이 서버 검증: gemma3:12b)")
+    ap.add_argument(
+        "--physics-validate",
+        action="store_true",
+        default=False,
+        help=(
+            "이벤트 트리거 Physics 검증: Stage-1 후보 윈도우의 관측 파형을 "
+            "공개 테스트계통에 온디맨드 재생(기본 off)"
+        ),
+    )
+    ap.add_argument(
+        "--physics-timeout-s",
+        type=float,
+        default=60.0,
+        help="후보당 Physics 시뮬레이션 최대 벽시계 초",
+    )
+    ap.add_argument(
+        "--physics-test-system",
+        choices=["kundur_ieeest", "wecc_179_gencls"],
+        default="kundur_ieeest",
+        help="운영 모드 Physics 검증에 사용할 공개 테스트계통",
+    )
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
     run(args)

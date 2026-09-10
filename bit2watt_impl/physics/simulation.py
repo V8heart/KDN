@@ -366,3 +366,208 @@ def ensure_parent(path: str | Path) -> Path:
     target = Path(path)
     target.parent.mkdir(parents=True, exist_ok=True)
     return target
+
+
+def power_series_to_relative_events(
+    power_series: np.ndarray,
+    sample_hz: float,
+    *,
+    t_start_s: float = 1.0,
+    max_amp_frac: float = 0.15,
+    min_interval_s: float = 0.1,
+    change_eps: float = 0.01,
+) -> tuple[list[tuple[float, float]], dict[str, float]]:
+    """Convert observed GPU watts into sparse PQ relative-delta events.
+
+    Mapping is shape-preserving relative deviation around the window mean,
+    not a conversion from watts to grid MW. The relative deviation is clipped
+    to ``max_amp_frac`` so public test-system TDS remains numerically stable.
+    """
+    power = np.asarray(power_series, dtype=float)
+    power = power[np.isfinite(power)]
+    if len(power) < 8:
+        raise ValueError("power_series needs at least 8 finite samples")
+    if sample_hz <= 0:
+        raise ValueError("sample_hz must be positive")
+
+    mean = float(np.mean(power))
+    if abs(mean) < 1e-9:
+        raise ValueError("power_series mean is near zero; cannot normalize")
+    raw_delta = (power - mean) / mean
+    peak_raw = float(np.max(np.abs(raw_delta)))
+    scale = 1.0
+    if peak_raw > max_amp_frac and peak_raw > 0:
+        scale = max_amp_frac / peak_raw
+    clipped = np.clip(raw_delta * scale, -max_amp_frac, max_amp_frac)
+
+    events: list[tuple[float, float]] = []
+    last_t = -1e9
+    last_delta: float | None = None
+    for i, delta in enumerate(clipped):
+        t = t_start_s + i / sample_hz
+        delta_f = float(delta)
+        if last_delta is None:
+            events.append((t, delta_f))
+            last_t, last_delta = t, delta_f
+            continue
+        if (t - last_t) < min_interval_s and abs(delta_f - last_delta) < change_eps:
+            continue
+        if abs(delta_f - last_delta) < change_eps and (t - last_t) < max(min_interval_s * 5, 0.5):
+            continue
+        events.append((t, delta_f))
+        last_t, last_delta = t, delta_f
+
+    t_end = t_start_s + (len(clipped) - 1) / sample_hz
+    if not events or abs(events[-1][0] - t_end) > 1e-9:
+        events.append((t_end, float(clipped[-1])))
+    events.append((t_end + 2.0, 0.0))
+
+    meta = {
+        "mean_w": mean,
+        "peak_raw_delta": peak_raw,
+        "amp_scale": float(scale),
+        "max_amp_frac": float(max_amp_frac),
+        "n_events": float(len(events)),
+        "t_start_s": float(t_start_s),
+        "t_end_s": float(t_end),
+        "duration_s": float(t_end - t_start_s),
+    }
+    return events, meta
+
+
+def inject_observed_waveform(
+    power_series: np.ndarray,
+    sample_hz: float,
+    *,
+    test_system: str = "kundur_ieeest",
+    max_amp_frac: float = 0.15,
+    min_interval_s: float = 0.1,
+    max_chunk_s: float = 0.5,
+    criteria: int = 1,
+) -> dict[str, Any]:
+    """Replay an observed power(t) window onto PQ.Ppf of a public test system.
+
+    Unlike fixed AttackProfile square/ramp generators, this path does not invent
+    a synthetic frequency/amplitude scenario. It replays the candidate window
+    shape as a relative load modulation on Kundur/WECC.
+    """
+    if test_system == "kundur_ieeest":
+        builder, model_name, pq_selection = build_kundur_system, "GENROU", "first"
+    elif test_system in {"wecc_179_gencls", "wecc"}:
+        builder, model_name, pq_selection = build_wecc_system, "GENCLS", "largest_p0"
+    else:
+        raise ValueError(f"unsupported test_system: {test_system}")
+
+    events, meta = power_series_to_relative_events(
+        power_series,
+        sample_hz,
+        max_amp_frac=max_amp_frac,
+        min_interval_s=min_interval_s,
+    )
+
+    ss = builder()
+    ss.TDS.config.criteria = criteria
+    ss.TDS.config.tstep = 1.0 / 30.0
+    ss.TDS.config.shrinkt = 1
+    ss.TDS.config.max_iter = max(30, int(ss.TDS.config.max_iter))
+    selected_pq = select_pq_idx(ss, strategy=pq_selection)
+    p0 = float(ss.PQ.get(src="p0", idx=selected_pq, attr="v"))
+    pq_bus = str(ss.PQ.get(src="bus", idx=selected_pq, attr="v"))
+
+    for t_s, relative_delta in events:
+        ok, _, reason = run_to(ss, t_s, max_chunk_s=max_chunk_s)
+        if not ok:
+            return {
+                "test_system": test_system,
+                "case_version": "ANDES-2.0.0",
+                "mode": "observed_waveform_replay",
+                "pq_idx": str(selected_pq),
+                "pq_bus": pq_bus,
+                "pq_base_pu": p0,
+                "converged": False,
+                "failure_reason": reason,
+                "t_reached_s": current_time(ss),
+                "osc_std": None,
+                "rocof_hz_s": None,
+                "dominant_freq_hz": None,
+                "osc_ptp": None,
+                **{f"waveform_{k}": v for k, v in meta.items()},
+            }
+        ss.PQ.set(src="Ppf", idx=selected_pq, value=p0 * (1.0 + relative_delta))
+
+    features = _extract_omega(
+        ss,
+        model_name=model_name,
+        t_start_s=meta["t_start_s"],
+        t_end_s=meta["t_end_s"] + 2.0,
+        forcing_frequency_hz=None,
+    )
+    return {
+        "test_system": test_system,
+        "case_version": "ANDES-2.0.0",
+        "mode": "observed_waveform_replay",
+        "pq_idx": str(selected_pq),
+        "pq_bus": pq_bus,
+        "pq_base_pu": p0,
+        "converged": True,
+        "failure_reason": "",
+        "t_reached_s": current_time(ss),
+        **features,
+        **{f"waveform_{k}": v for k, v in meta.items()},
+    }
+
+
+def inject_observed_waveform_with_timeout(
+    power_series: np.ndarray,
+    sample_hz: float,
+    *,
+    timeout_s: float = 60.0,
+    test_system: str = "kundur_ieeest",
+    max_amp_frac: float = 0.15,
+) -> dict[str, Any]:
+    """Run observed-waveform injection with a wall-clock timeout.
+
+    Uses SIGALRM so a hung TDS does not block the cyber pipeline forever.
+    """
+    import signal
+
+    class _PhysicsTimeout(Exception):
+        pass
+
+    def _handle(_signum, _frame) -> None:
+        raise _PhysicsTimeout(f"physics validation exceeded {timeout_s:.1f}s")
+
+    previous = signal.signal(signal.SIGALRM, _handle)
+    signal.setitimer(signal.ITIMER_REAL, float(timeout_s))
+    try:
+        return inject_observed_waveform(
+            power_series,
+            sample_hz,
+            test_system=test_system,
+            max_amp_frac=max_amp_frac,
+        )
+    except _PhysicsTimeout as exc:
+        return {
+            "test_system": test_system,
+            "mode": "observed_waveform_replay",
+            "converged": False,
+            "failure_reason": str(exc),
+            "osc_std": None,
+            "rocof_hz_s": None,
+            "dominant_freq_hz": None,
+            "osc_ptp": None,
+        }
+    except Exception as exc:
+        return {
+            "test_system": test_system,
+            "mode": "observed_waveform_replay",
+            "converged": False,
+            "failure_reason": f"{type(exc).__name__}: {exc}",
+            "osc_std": None,
+            "rocof_hz_s": None,
+            "dominant_freq_hz": None,
+            "osc_ptp": None,
+        }
+    finally:
+        signal.setitimer(signal.ITIMER_REAL, 0.0)
+        signal.signal(signal.SIGALRM, previous)

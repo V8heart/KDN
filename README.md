@@ -101,8 +101,8 @@ SWMA 코드는 Bit2Watt persistent kernel의 동일 재현이 아니라, PyTorch
 | `corpus/*.md` | 공격 시그니처 지식베이스. **새 공격은 여기 문서만 추가하면 대응** |
 | `pipeline/features.py` | 1·2단계: 텔레메트리 → 통계 피처 → 정성적 자연어 설명 |
 | `pipeline/rag_analyzer.py` | 3단계: RAG 검색(sbert/tfidf) + LLM 판정(ollama/stub) |
-| `pipeline/run_pipeline.py` | 전체 오케스트레이션 |
-| `pipeline/physics_correlation.py` | Cyber 후보와 Physics Tier B 결과를 `attack_id`로 결합 |
+| `pipeline/run_pipeline.py` | 전체 오케스트레이션 (+ 선택 `--physics-validate` 이벤트 트리거) |
+| `pipeline/physics_correlation.py` | **§8 실험 전용**: 고정 시나리오 Physics CSV와 cyber JSON을 `attack_id`로 사후 결합(운영 트리거 아님) |
 | `dataset/` | 공통 스키마, 합성 데이터, 캡처·평가 도구 |
 | `bit2watt_impl/physics/` | 공개 Kundur/WECC 계통에서의 동적 응답 검증 |
 | `bit2watt_impl/` | NVML 수집과 SWMA/LTMA-like 검증 워크로드 |
@@ -145,13 +145,34 @@ SWMA 코드는 Bit2Watt persistent kernel의 동일 재현이 아니라, PyTorch
 
 ## Physics Tier B — 공개 동적 테스트 계통 검증
 
-Cyber Stage 1은 GPU 텔레메트리 후보 선별이고, Physics Tier B는 별도의
-오프라인 시뮬레이션이다. Tier B는 고위험으로 분류된 상대 부하 파형이 공개
-Kundur/WECC 테스트 계통에서 더 큰 발전기 속도 응답을 만드는지 확인한다.
-GPU 전력 W를 실제 계통 MW로 직접 환산하지 않는다.
-`attack_id`, 파형 종류와 주파수는 양쪽에서 공유하지만, `cyber_amplitude_frac`은
-관측된 GPU 파형을 설명하고 `amplitude_frac`은 공개 테스트계통에 사전 등록한
-민감도 주입값이다. 둘 사이를 실제 설비 환산 관계로 해석하면 안 된다.
+Cyber Stage 1은 GPU 텔레메트리 후보 선별이다. Physics Tier B에는 두 모드가 있다.
+
+### 운영 모드 (이벤트 트리거, 권장)
+
+Stage 1이 후보로 잡은 **바로 그 윈도우**의 관측 `power(t)`를 공개 테스트계통에
+온디맨드로 재생한다. 사후 `attack_id` 매칭이 아니라, 한 번의
+`run_pipeline.py` 실행 결과 dict에 `verdict`와 `physics_*`가 함께 들어간다.
+기본값은 off이며, ANDES가 있는 `.venv-physics`에서 켠다.
+
+```bash
+source .venv-physics/bin/activate
+python pipeline/run_pipeline.py \
+  --telemetry dataset/synthetic/all_v2.csv --baseline-mean 120 \
+  --rag-backend tfidf --llm-backend stub \
+  --physics-validate --physics-timeout-s 60 \
+  --out dataset/eval/cyber_physics_ops.json
+```
+
+### §8 연구 실험 모드 (고정 시나리오 + 스윕)
+
+사전 정의 AttackProfile / 주파수 스윕을 배치로 돌린 뒤, cyber 결과와
+`attack_id`로 조인한다. 두 파이프라인의 ID 체계가 다르면 unmatched가 나오며,
+이는 운영 트리거 실패가 아니라 실험 설계의 한계다.
+`pipeline/physics_correlation.py`는 이 실험 모드 전용이다.
+
+배치 스윕도 GPU W→계통 MW 환산이 아니라 상대 부하 파형 주입이다.
+`cyber_amplitude_frac`은 관측 GPU 파형 설명용이고 `amplitude_frac`은 공개
+테스트계통 민감도 주입값이며, 둘을 실제 설비 환산으로 해석하면 안 된다.
 
 ANDES 2.0은 Python 3.11 이상이 필요하므로 기존 `.venv`와 분리한다.
 
@@ -169,7 +190,7 @@ python -m bit2watt_impl.physics.frequency_sweep
 python -m bit2watt_impl.physics.stage3_wecc
 ```
 
-Cyber 결과와 결합:
+Cyber 결과와 결합 (**§8 실험 모드만**; 운영은 `--physics-validate` 사용):
 
 ```bash
 source .venv/bin/activate

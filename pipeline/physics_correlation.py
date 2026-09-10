@@ -1,4 +1,16 @@
-"""Join Cyber Stage-1/RAG results with Physics Tier B by attack_id."""
+"""§8 experimental join: Cyber Stage-1/RAG results × fixed Physics scenarios.
+
+This script is **not** the ops-mode event trigger. Ops mode replays each Stage-1
+candidate window on-demand via ``pipeline/run_pipeline.py --physics-validate``.
+
+Use this module only for offline §8 research experiments that compare cyber
+pipeline outputs against **pre-defined** AttackProfile batches
+(``dataset/attack_profiles.py`` + frequency sweeps). Those physics ``attack_id``
+names (e.g. ``swma-periodic-f0.60-a0.10``) are scenario labels from a separate
+batch run; they are not expected to match synthetic session names from
+``dataset/synthetic/all_v2.csv``. Unmatched joins are therefore common and do
+not indicate an ops-mode failure.
+"""
 from __future__ import annotations
 
 import argparse
@@ -118,7 +130,12 @@ def correlation_report(joined: pd.DataFrame) -> dict[str, Any]:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(
+        description=(
+            "§8 experimental offline join of cyber JSON with fixed-scenario "
+            "physics CSVs. Not the ops --physics-validate path."
+        )
+    )
     parser.add_argument("--cyber-json", type=Path, required=True)
     parser.add_argument("--physics-csv", type=Path, nargs="+", required=True)
     parser.add_argument(
