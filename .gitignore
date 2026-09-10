@@ -1,9 +1,17 @@
 .venv/
+.venv-physics/
 __pycache__/
 *.py[cod]
 *.deb
 result.json
 data/raw/
+dataset/real/
+dataset/**/*.csv.gz
+dataset/**/summary.md
 .DS_Store
 *.egg-info/
 .pytest_cache/
+*_out.lst
+*_out.npz
+*_out.txt
+stage1_results.csv

@@ -1,0 +1,83 @@
+{
+  "backend": "tfidf",
+  "positive_cases": 9,
+  "top1_accuracy": 1.0,
+  "unknown_cases": 3,
+  "unknown_max_similarity": 0.25474708967575654,
+  "unknown_threshold": 0.28,
+  "unknown_rejection_rate": 1.0,
+  "details": [
+    {
+      "case_id": "syn-normal-baseline-100-gpu0",
+      "expected": "normal_workloads",
+      "top1": "normal_workloads",
+      "top1_score": 0.3325612425638921
+    },
+    {
+      "case_id": "syn-normal-ddp-101-gpu0",
+      "expected": "normal_workloads",
+      "top1": "normal_workloads",
+      "top1_score": 0.3509550183188533
+    },
+    {
+      "case_id": "syn-normal-hpo-102-gpu0",
+      "expected": "normal_workloads",
+      "top1": "normal_workloads",
+      "top1_score": 0.3552811824644328
+    },
+    {
+      "case_id": "syn-normal-checkpoint-103-gpu0",
+      "expected": "normal_workloads",
+      "top1": "normal_workloads",
+      "top1_score": 0.3573353975481287
+    },
+    {
+      "case_id": "syn-normal-dataloader-104-gpu0",
+      "expected": "normal_workloads",
+      "top1": "normal_workloads",
+      "top1_score": 0.3528124175795316
+    },
+    {
+      "case_id": "syn-normal-eval-105-gpu0",
+      "expected": "normal_workloads",
+      "top1": "normal_workloads",
+      "top1_score": 0.33717364043699566
+    },
+    {
+      "case_id": "syn-attack-swma-200-gpu0",
+      "expected": "swma",
+      "top1": "swma",
+      "top1_score": 0.4111865554495891
+    },
+    {
+      "case_id": "syn-attack-ltma-201-gpu0",
+      "expected": "ltma",
+      "top1": "ltma",
+      "top1_score": 0.3463988568059101
+    },
+    {
+      "case_id": "syn-attack-crypto-202-gpu0",
+      "expected": "cryptojacking",
+      "top1": "cryptojacking",
+      "top1_score": 0.412973839682473
+    },
+    {
+      "case_id": "unknown_single_impulse",
+      "expected": null,
+      "top1": "cryptojacking",
+      "top1_score": 0.23335365266983382
+    },
+    {
+      "case_id": "unknown_slow_drift",
+      "expected": null,
+      "top1": "cryptojacking",
+      "top1_score": 0.25474708967575654
+    },
+    {
+      "case_id": "unknown_random_walk",
+      "expected": null,
+      "top1": "ltma",
+      "top1_score": 0.2405079300461714
+    }
+  ]
+}

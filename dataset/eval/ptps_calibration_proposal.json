@@ -1,0 +1,90 @@
+{
+  "scope": "calibration proposal from public dynamic test systems only",
+  "usable_rows": 3,
+  "minimum_rows_for_numeric_weights": 8,
+  "status": "directional_only",
+  "feature_associations": {
+    "cyber_amplitude_frac": {
+      "n": 3,
+      "rho": -1.0,
+      "pvalue": 0.0
+    },
+    "cyber_rag_top_score": {
+      "n": 3,
+      "rho": -0.5,
+      "pvalue": 0.6666666666666666
+    },
+    "cyber_mean_w": {
+      "n": 3,
+      "rho": -0.5,
+      "pvalue": 0.6666666666666666
+    },
+    "cyber_std_w": {
+      "n": 3,
+      "rho": -0.5,
+      "pvalue": 0.6666666666666666
+    },
+    "cyber_swing_ratio": {
+      "n": 3,
+      "rho": 0.5,
+      "pvalue": 0.6666666666666666
+    },
+    "cyber_cv": {
+      "n": 3,
+      "rho": -0.5,
+      "pvalue": 0.6666666666666666
+    },
+    "cyber_periodicity_strength": {
+      "n": 3,
+      "rho": -0.5,
+      "pvalue": 0.6666666666666666
+    },
+    "cyber_dominant_freq_hz": {
+      "n": 3,
+      "rho": 0.8660254037844387,
+      "pvalue": 0.33333333333333326
+    },
+    "cyber_duty_regularity": {
+      "n": 3,
+      "rho": -0.5,
+      "pvalue": 0.6666666666666666
+    },
+    "cyber_n_transitions": {
+      "n": 3,
+      "rho": -0.5,
+      "pvalue": 0.6666666666666666
+    },
+    "cyber_ramp_mean_w_per_s": {
+      "n": 3,
+      "rho": -0.5,
+      "pvalue": 0.6666666666666666
+    },
+    "cyber_ramp_max_w_per_s": {
+      "n": 3,
+      "rho": -0.5,
+      "pvalue": 0.6666666666666666
+    },
+    "cyber_high_load_fraction": {
+      "n": 3,
+      "rho": -0.5,
+      "pvalue": 0.6666666666666666
+    },
+    "cyber_longest_high_seconds": {
+      "n": 3,
+      "rho": -0.5,
+      "pvalue": 0.6666666666666666
+    },
+    "cyber_util_mean": {
+      "n": 3,
+      "rho": -0.5,
+      "pvalue": 0.6666666666666666
+    },
+    "cyber_util_std": {
+      "n": 3,
+      "rho": -0.5,
+      "pvalue": 0.6666666666666666
+    }
+  },
+  "proposed_weights": null,
+  "warning": "Do not interpret these values as impact estimates for a real regional grid."
+}

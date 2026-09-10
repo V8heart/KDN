@@ -1,0 +1,12 @@
+{
+  "test_system": "kundur_ieeest",
+  "scope": "public dynamic test system; not a real regional grid",
+  "runs": 28,
+  "converged": 26,
+  "convergence_rate": 0.9285714285714286,
+  "peak_frequency_hz": 0.1,
+  "peak_osc_std": 0.0044347308114567,
+  "near_0_6_peak_frequency_hz": 0.6500000000000001,
+  "global_peak_near_0_6": false,
+  "interpretation": "global osc_std peak near ~0.6 Hz was not observed"
+}

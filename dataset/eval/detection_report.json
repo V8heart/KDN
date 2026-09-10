@@ -1,0 +1,15 @@
+{
+  "windows": 99,
+  "candidate_rate": 0.5252525252525253,
+  "attack_candidate_recall": 1.0,
+  "normal_candidate_rate": 0.2878787878787879,
+  "rag_top1_on_candidates": 1.0,
+  "normal_hard_negative_rejection": 1.0,
+  "filter_trigger_counts": {
+    "large_swing": 39,
+    "high_mean_power": 12,
+    "swing_zscore": 1,
+    "mechanical_periodicity": 16,
+    "persistent_high_load": 11
+  }
+}

@@ -1,0 +1,128 @@
+[
+  {
+    "session_id": "syn-normal-baseline-100",
+    "label": "normal_baseline",
+    "source": "synthetic",
+    "sample_hz": 10.0,
+    "gpu_ids": [
+      0
+    ],
+    "rows": 1200,
+    "seed": 100,
+    "workload": "normal_baseline",
+    "notes": null,
+    "attack_id": "normal-control"
+  },
+  {
+    "session_id": "syn-normal-ddp-101",
+    "label": "normal_distributed_training",
+    "source": "synthetic",
+    "sample_hz": 10.0,
+    "gpu_ids": [
+      0
+    ],
+    "rows": 1200,
+    "seed": 101,
+    "workload": "normal_distributed_training",
+    "notes": null,
+    "attack_id": "syn-normal-ddp-101"
+  },
+  {
+    "session_id": "syn-normal-hpo-102",
+    "label": "normal_hpo_search",
+    "source": "synthetic",
+    "sample_hz": 10.0,
+    "gpu_ids": [
+      0
+    ],
+    "rows": 1200,
+    "seed": 102,
+    "workload": "normal_hpo_search",
+    "notes": null,
+    "attack_id": "syn-normal-hpo-102"
+  },
+  {
+    "session_id": "syn-normal-checkpoint-103",
+    "label": "normal_checkpoint",
+    "source": "synthetic",
+    "sample_hz": 10.0,
+    "gpu_ids": [
+      0
+    ],
+    "rows": 1200,
+    "seed": 103,
+    "workload": "normal_checkpoint",
+    "notes": null,
+    "attack_id": "syn-normal-checkpoint-103"
+  },
+  {
+    "session_id": "syn-normal-dataloader-104",
+    "label": "normal_dataloader_stall",
+    "source": "synthetic",
+    "sample_hz": 10.0,
+    "gpu_ids": [
+      0
+    ],
+    "rows": 1200,
+    "seed": 104,
+    "workload": "normal_dataloader_stall",
+    "notes": null,
+    "attack_id": "syn-normal-dataloader-104"
+  },
+  {
+    "session_id": "syn-normal-eval-105",
+    "label": "normal_eval_train_switch",
+    "source": "synthetic",
+    "sample_hz": 10.0,
+    "gpu_ids": [
+      0
+    ],
+    "rows": 1200,
+    "seed": 105,
+    "workload": "normal_eval_train_switch",
+    "notes": null,
+    "attack_id": "syn-normal-eval-105"
+  },
+  {
+    "session_id": "syn-attack-swma-200",
+    "label": "swma",
+    "source": "synthetic",
+    "sample_hz": 10.0,
+    "gpu_ids": [
+      0
+    ],
+    "rows": 1200,
+    "seed": 200,
+    "workload": "unknown_cuda_workload",
+    "notes": null,
+    "attack_id": "swma-periodic-primary"
+  },
+  {
+    "session_id": "syn-attack-ltma-201",
+    "label": "ltma",
+    "source": "synthetic",
+    "sample_hz": 10.0,
+    "gpu_ids": [
+      0
+    ],
+    "rows": 1200,
+    "seed": 201,
+    "workload": "llm_training",
+    "notes": null,
+    "attack_id": "ltma-irregular-primary"
+  },
+  {
+    "session_id": "syn-attack-crypto-202",
+    "label": "cryptojacking",
+    "source": "synthetic",
+    "sample_hz": 10.0,
+    "gpu_ids": [
+      0
+    ],
+    "rows": 1200,
+    "seed": 202,
+    "workload": "unregistered_hash_benchmark",
+    "notes": null,
+    "attack_id": "cryptojacking-steady-primary"
+  }
+]

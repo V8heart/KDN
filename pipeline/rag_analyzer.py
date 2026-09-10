@@ -85,7 +85,7 @@ class SignatureRetriever:
 
 
 def analyze_with_llm(description: str, retrieved, context: dict | None = None,
-                      backend: str = "ollama", model: str = "qwen2.5:7b"):
+                      backend: str = "ollama", model: str = "gemma3:12b"):
     """검색된 시그니처 문서를 근거로 LLM이 판정·설명 생성.
 
     backend="ollama": 로컬 Ollama HTTP API 호출 (http://localhost:11434)

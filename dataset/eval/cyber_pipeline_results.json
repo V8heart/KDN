@@ -1,0 +1,3201 @@
+[
+  {
+    "session_id": "syn-normal-hpo-102",
+    "attack_id": "syn-normal-hpo-102",
+    "window_id": "syn-normal-hpo-102:gpu0:rows0-200",
+    "gpu_id": 0,
+    "window_start": 0,
+    "window_end": 200,
+    "ground_truth": "normal_hpo_search",
+    "swing_ratio": 1.195,
+    "z_score": -0.062,
+    "candidate_reasons": [
+      "large_swing"
+    ],
+    "features": {
+      "mean_w": 151.21516,
+      "std_w": 62.24972,
+      "swing_ratio": 1.19524,
+      "cv": 0.41166,
+      "periodicity_strength": 0.8362,
+      "dominant_freq_hz": 5.0,
+      "duty_regularity": 0.31578,
+      "n_transitions": 4.0,
+      "ramp_mean_w_per_s": 41.37207,
+      "ramp_max_w_per_s": 1749.44247,
+      "high_load_fraction": 0.245,
+      "longest_high_seconds": 4.9,
+      "util_mean": 52.94541,
+      "util_std": 23.77514
+    },
+    "description": "평균 전력은 정상 범위 내로 유지됨. 전력 변동폭이 다소 큼 (swing ratio 1.20). high/low 전환이 불규칙하고 예측하기 어려움. 지속적이고 뚜렷한 주기성 존재 (강도 0.84). 순간 전력 상승·하강 기울기가 큼.",
+    "rag_top": [
+      [
+        "normal_workloads",
+        0.352
+      ],
+      [
+        "ltma",
+        0.26
+      ],
+      [
+        "swma",
+        0.247
+      ]
+    ],
+    "threat_id": "normal_workloads",
+    "anomaly_score": 0.59762,
+    "score_components": {
+      "z_score": 0.01246,
+      "swing": 0.59762,
+      "mean_deviation": 0.26013,
+      "persistence": 0.245,
+      "mechanical_periodicity": 0.26405
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "정상",
+      "closest_match": "normal_workloads",
+      "reason": "(stub) 검색 최상위 문서 'normal_workloads'(유사도 0.352) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-normal-hpo-102",
+    "attack_id": "syn-normal-hpo-102",
+    "window_id": "syn-normal-hpo-102:gpu0:rows300-500",
+    "gpu_id": 0,
+    "window_start": 300,
+    "window_end": 500,
+    "ground_truth": "normal_hpo_search",
+    "swing_ratio": 1.128,
+    "z_score": -0.416,
+    "candidate_reasons": [
+      "large_swing"
+    ],
+    "features": {
+      "mean_w": 163.5477,
+      "std_w": 65.16765,
+      "swing_ratio": 1.12763,
+      "cv": 0.39846,
+      "periodicity_strength": 0.89164,
+      "dominant_freq_hz": 5.0,
+      "duty_regularity": 0.34532,
+      "n_transitions": 3.0,
+      "ramp_mean_w_per_s": 33.07099,
+      "ramp_max_w_per_s": 1719.46298,
+      "high_load_fraction": 0.575,
+      "longest_high_seconds": 11.5,
+      "util_mean": 57.75568,
+      "util_std": 24.98868
+    },
+    "description": "평균 전력이 정상 기준선보다 크게 높게 지속됨. 전력 변동폭이 다소 큼 (swing ratio 1.13). high/low 전환이 불규칙하고 예측하기 어려움. 지속적이고 뚜렷한 주기성 존재 (강도 0.89). 순간 전력 상승·하강 기울기가 큼.",
+    "rag_top": [
+      [
+        "normal_workloads",
+        0.355
+      ],
+      [
+        "swma",
+        0.255
+      ],
+      [
+        "ltma",
+        0.254
+      ]
+    ],
+    "threat_id": "normal_workloads",
+    "anomaly_score": 0.575,
+    "score_components": {
+      "z_score": 0.08327,
+      "swing": 0.56381,
+      "mean_deviation": 0.3629,
+      "persistence": 0.575,
+      "mechanical_periodicity": 0.3079
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "정상",
+      "closest_match": "normal_workloads",
+      "reason": "(stub) 검색 최상위 문서 'normal_workloads'(유사도 0.355) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-normal-hpo-102",
+    "attack_id": "syn-normal-hpo-102",
+    "window_id": "syn-normal-hpo-102:gpu0:rows400-600",
+    "gpu_id": 0,
+    "window_start": 400,
+    "window_end": 600,
+    "ground_truth": "normal_hpo_search",
+    "swing_ratio": 1.193,
+    "z_score": -0.076,
+    "candidate_reasons": [
+      "large_swing"
+    ],
+    "features": {
+      "mean_w": 147.6853,
+      "std_w": 54.96898,
+      "swing_ratio": 1.19258,
+      "cv": 0.3722,
+      "periodicity_strength": 0.85403,
+      "dominant_freq_hz": 5.0,
+      "duty_regularity": 0.05859,
+      "n_transitions": 4.0,
+      "ramp_mean_w_per_s": 38.47939,
+      "ramp_max_w_per_s": 1708.97223,
+      "high_load_fraction": 0.145,
+      "longest_high_seconds": 2.9,
+      "util_mean": 51.55281,
+      "util_std": 21.02983
+    },
+    "description": "평균 전력은 정상 범위 내로 유지됨. 전력 변동폭이 다소 큼 (swing ratio 1.19). high/low 전환이 불규칙하고 예측하기 어려움. 지속적이고 뚜렷한 주기성 존재 (강도 0.85). 순간 전력 상승·하강 기울기가 큼.",
+    "rag_top": [
+      [
+        "normal_workloads",
+        0.353
+      ],
+      [
+        "ltma",
+        0.26
+      ],
+      [
+        "swma",
+        0.247
+      ]
+    ],
+    "threat_id": "normal_workloads",
+    "anomaly_score": 0.59629,
+    "score_components": {
+      "z_score": 0.01525,
+      "swing": 0.59629,
+      "mean_deviation": 0.23071,
+      "persistence": 0.145,
+      "mechanical_periodicity": 0.05004
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "정상",
+      "closest_match": "normal_workloads",
+      "reason": "(stub) 검색 최상위 문서 'normal_workloads'(유사도 0.353) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-normal-hpo-102",
+    "attack_id": "syn-normal-hpo-102",
+    "window_id": "syn-normal-hpo-102:gpu0:rows500-700",
+    "gpu_id": 0,
+    "window_start": 500,
+    "window_end": 700,
+    "ground_truth": "normal_hpo_search",
+    "swing_ratio": 1.211,
+    "z_score": 0.018,
+    "candidate_reasons": [
+      "large_swing"
+    ],
+    "features": {
+      "mean_w": 146.5359,
+      "std_w": 59.75977,
+      "swing_ratio": 1.21054,
+      "cv": 0.40782,
+      "periodicity_strength": 0.87465,
+      "dominant_freq_hz": 5.0,
+      "duty_regularity": 0.5431,
+      "n_transitions": 4.0,
+      "ramp_mean_w_per_s": 39.67913,
+      "ramp_max_w_per_s": 1681.63154,
+      "high_load_fraction": 0.185,
+      "longest_high_seconds": 3.7,
+      "util_mean": 50.94244,
+      "util_std": 23.12321
+    },
+    "description": "평균 전력은 정상 범위 내로 유지됨. 전력 변동폭이 다소 큼 (swing ratio 1.21). high/low 전환이 불규칙하고 예측하기 어려움. 지속적이고 뚜렷한 주기성 존재 (강도 0.87). 순간 전력 상승·하강 기울기가 큼.",
+    "rag_top": [
+      [
+        "normal_workloads",
+        0.353
+      ],
+      [
+        "ltma",
+        0.26
+      ],
+      [
+        "swma",
+        0.247
+      ]
+    ],
+    "threat_id": "normal_workloads",
+    "anomaly_score": 0.60527,
+    "score_components": {
+      "z_score": 0.00356,
+      "swing": 0.60527,
+      "mean_deviation": 0.22113,
+      "persistence": 0.185,
+      "mechanical_periodicity": 0.47502
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "정상",
+      "closest_match": "normal_workloads",
+      "reason": "(stub) 검색 최상위 문서 'normal_workloads'(유사도 0.353) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-normal-hpo-102",
+    "attack_id": "syn-normal-hpo-102",
+    "window_id": "syn-normal-hpo-102:gpu0:rows600-800",
+    "gpu_id": 0,
+    "window_start": 600,
+    "window_end": 800,
+    "ground_truth": "normal_hpo_search",
+    "swing_ratio": 1.476,
+    "z_score": 1.408,
+    "candidate_reasons": [
+      "large_swing"
+    ],
+    "features": {
+      "mean_w": 159.20269,
+      "std_w": 74.58441,
+      "swing_ratio": 1.476,
+      "cv": 0.46849,
+      "periodicity_strength": 0.87718,
+      "dominant_freq_hz": 5.0,
+      "duty_regularity": 0.26582,
+      "n_transitions": 4.0,
+      "ramp_mean_w_per_s": 46.28901,
+      "ramp_max_w_per_s": 2252.96265,
+      "high_load_fraction": 0.495,
+      "longest_high_seconds": 3.9,
+      "util_mean": 55.90996,
+      "util_std": 28.54671
+    },
+    "description": "평균 전력이 정상 기준선보다 크게 높게 지속됨. 전력 변동폭이 다소 큼 (swing ratio 1.48). high/low 전환이 불규칙하고 예측하기 어려움. 지속적이고 뚜렷한 주기성 존재 (강도 0.88). 순간 전력 상승·하강 기울기가 큼.",
+    "rag_top": [
+      [
+        "normal_workloads",
+        0.355
+      ],
+      [
+        "swma",
+        0.255
+      ],
+      [
+        "ltma",
+        0.254
+      ]
+    ],
+    "threat_id": "normal_workloads",
+    "anomaly_score": 0.738,
+    "score_components": {
+      "z_score": 0.28154,
+      "swing": 0.738,
+      "mean_deviation": 0.32669,
+      "persistence": 0.495,
+      "mechanical_periodicity": 0.23317
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "정상",
+      "closest_match": "normal_workloads",
+      "reason": "(stub) 검색 최상위 문서 'normal_workloads'(유사도 0.355) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-normal-hpo-102",
+    "attack_id": "syn-normal-hpo-102",
+    "window_id": "syn-normal-hpo-102:gpu0:rows700-900",
+    "gpu_id": 0,
+    "window_start": 700,
+    "window_end": 900,
+    "ground_truth": "normal_hpo_search",
+    "swing_ratio": 1.08,
+    "z_score": -0.665,
+    "candidate_reasons": [
+      "high_mean_power"
+    ],
+    "features": {
+      "mean_w": 216.75174,
+      "std_w": 66.21805,
+      "swing_ratio": 1.08007,
+      "cv": 0.3055,
+      "periodicity_strength": 0.90794,
+      "dominant_freq_hz": 5.0,
+      "duty_regularity": 0.0,
+      "n_transitions": 2.0,
+      "ramp_mean_w_per_s": 29.90035,
+      "ramp_max_w_per_s": 2252.96265,
+      "high_load_fraction": 0.81,
+      "longest_high_seconds": 11.2,
+      "util_mean": 77.89844,
+      "util_std": 25.04857
+    },
+    "description": "평균 전력이 정상 기준선보다 크게 높게 지속됨. 전력 변동폭이 다소 큼 (swing ratio 1.08). on/off 전환이 거의 없어 지속적인 부하 상태. 지속적이고 뚜렷한 주기성 존재 (강도 0.91). 높은 부하가 시간창 대부분에서 지속됨. 순간 전력 상승·하강 기울기가 큼.",
+    "rag_top": [
+      [
+        "normal_workloads",
+        0.339
+      ],
+      [
+        "cryptojacking",
+        0.272
+      ],
+      [
+        "swma",
+        0.251
+      ]
+    ],
+    "threat_id": "normal_workloads",
+    "anomaly_score": 0.81,
+    "score_components": {
+      "z_score": 0.13307,
+      "swing": 0.54003,
+      "mean_deviation": 0.80626,
+      "persistence": 0.81,
+      "mechanical_periodicity": 0.0
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "정상",
+      "closest_match": "normal_workloads",
+      "reason": "(stub) 검색 최상위 문서 'normal_workloads'(유사도 0.339) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-normal-hpo-102",
+    "attack_id": "syn-normal-hpo-102",
+    "window_id": "syn-normal-hpo-102:gpu0:rows800-1000",
+    "gpu_id": 0,
+    "window_start": 800,
+    "window_end": 1000,
+    "ground_truth": "normal_hpo_search",
+    "swing_ratio": 1.188,
+    "z_score": -0.1,
+    "candidate_reasons": [
+      "large_swing"
+    ],
+    "features": {
+      "mean_w": 195.81203,
+      "std_w": 75.24976,
+      "swing_ratio": 1.18804,
+      "cv": 0.3843,
+      "periodicity_strength": 0.93706,
+      "dominant_freq_hz": 5.0,
+      "duty_regularity": 0.0,
+      "n_transitions": 2.0,
+      "ramp_mean_w_per_s": 27.28558,
+      "ramp_max_w_per_s": 2251.21733,
+      "high_load_fraction": 0.53,
+      "longest_high_seconds": 10.6,
+      "util_mean": 69.9567,
+      "util_std": 28.70488
+    },
+    "description": "평균 전력이 정상 기준선보다 크게 높게 지속됨. 전력 변동폭이 다소 큼 (swing ratio 1.19). on/off 전환이 거의 없어 지속적인 부하 상태. 지속적이고 뚜렷한 주기성 존재 (강도 0.94). 순간 전력 상승·하강 기울기가 큼.",
+    "rag_top": [
+      [
+        "normal_workloads",
+        0.341
+      ],
+      [
+        "cryptojacking",
+        0.259
+      ],
+      [
+        "swma",
+        0.254
+      ]
+    ],
+    "threat_id": "normal_workloads",
+    "anomaly_score": 0.63177,
+    "score_components": {
+      "z_score": 0.02001,
+      "swing": 0.59402,
+      "mean_deviation": 0.63177,
+      "persistence": 0.53,
+      "mechanical_periodicity": 0.0
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "정상",
+      "closest_match": "normal_workloads",
+      "reason": "(stub) 검색 최상위 문서 'normal_workloads'(유사도 0.341) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-normal-hpo-102",
+    "attack_id": "syn-normal-hpo-102",
+    "window_id": "syn-normal-hpo-102:gpu0:rows900-1100",
+    "gpu_id": 0,
+    "window_start": 900,
+    "window_end": 1100,
+    "ground_truth": "normal_hpo_search",
+    "swing_ratio": 1.623,
+    "z_score": 2.176,
+    "candidate_reasons": [
+      "large_swing"
+    ],
+    "features": {
+      "mean_w": 141.99855,
+      "std_w": 65.14473,
+      "swing_ratio": 1.6228,
+      "cv": 0.45877,
+      "periodicity_strength": 0.83833,
+      "dominant_freq_hz": 5.0,
+      "duty_regularity": 0.17139,
+      "n_transitions": 4.0,
+      "ramp_mean_w_per_s": 42.37521,
+      "ramp_max_w_per_s": 2251.21733,
+      "high_load_fraction": 0.185,
+      "longest_high_seconds": 3.1,
+      "util_mean": 49.44801,
+      "util_std": 24.89526
+    },
+    "description": "평균 전력은 정상 범위 내로 유지됨. 전력 변동폭이 매우 큼 (swing ratio 1.62). high/low 전환이 불규칙하고 예측하기 어려움. 지속적이고 뚜렷한 주기성 존재 (강도 0.84). 순간 전력 상승·하강 기울기가 큼.",
+    "rag_top": [
+      [
+        "normal_workloads",
+        0.355
+      ],
+      [
+        "ltma",
+        0.257
+      ],
+      [
+        "swma",
+        0.253
+      ]
+    ],
+    "threat_id": "normal_workloads",
+    "anomaly_score": 0.8114,
+    "score_components": {
+      "z_score": 0.43528,
+      "swing": 0.8114,
+      "mean_deviation": 0.18332,
+      "persistence": 0.185,
+      "mechanical_periodicity": 0.14368
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "정상",
+      "closest_match": "normal_workloads",
+      "reason": "(stub) 검색 최상위 문서 'normal_workloads'(유사도 0.355) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-normal-hpo-102",
+    "attack_id": "syn-normal-hpo-102",
+    "window_id": "syn-normal-hpo-102:gpu0:rows1000-1200",
+    "gpu_id": 0,
+    "window_start": 1000,
+    "window_end": 1200,
+    "ground_truth": "normal_hpo_search",
+    "swing_ratio": 1.21,
+    "z_score": 0.014,
+    "candidate_reasons": [
+      "large_swing"
+    ],
+    "features": {
+      "mean_w": 163.65971,
+      "std_w": 69.02085,
+      "swing_ratio": 1.20973,
+      "cv": 0.42173,
+      "periodicity_strength": 0.89317,
+      "dominant_freq_hz": 5.0,
+      "duty_regularity": 0.21071,
+      "n_transitions": 4.0,
+      "ramp_mean_w_per_s": 40.25898,
+      "ramp_max_w_per_s": 1901.77342,
+      "high_load_fraction": 0.44,
+      "longest_high_seconds": 8.8,
+      "util_mean": 57.79526,
+      "util_std": 26.41867
+    },
+    "description": "평균 전력이 정상 기준선보다 크게 높게 지속됨. 전력 변동폭이 다소 큼 (swing ratio 1.21). high/low 전환이 불규칙하고 예측하기 어려움. 지속적이고 뚜렷한 주기성 존재 (강도 0.89). 순간 전력 상승·하강 기울기가 큼.",
+    "rag_top": [
+      [
+        "normal_workloads",
+        0.355
+      ],
+      [
+        "swma",
+        0.255
+      ],
+      [
+        "ltma",
+        0.254
+      ]
+    ],
+    "threat_id": "normal_workloads",
+    "anomaly_score": 0.60487,
+    "score_components": {
+      "z_score": 0.00272,
+      "swing": 0.60487,
+      "mean_deviation": 0.36383,
+      "persistence": 0.44,
+      "mechanical_periodicity": 0.1882
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "정상",
+      "closest_match": "normal_workloads",
+      "reason": "(stub) 검색 최상위 문서 'normal_workloads'(유사도 0.355) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-normal-dataloader-104",
+    "attack_id": "syn-normal-dataloader-104",
+    "window_id": "syn-normal-dataloader-104:gpu0:rows100-300",
+    "gpu_id": 0,
+    "window_start": 100,
+    "window_end": 300,
+    "ground_truth": "normal_dataloader_stall",
+    "swing_ratio": 0.187,
+    "z_score": -2.863,
+    "candidate_reasons": [
+      "swing_zscore"
+    ],
+    "features": {
+      "mean_w": 174.39573,
+      "std_w": 6.81349,
+      "swing_ratio": 0.18697,
+      "cv": 0.03907,
+      "periodicity_strength": 0.50005,
+      "dominant_freq_hz": 5.0,
+      "duty_regularity": 0.3879,
+      "n_transitions": 36.0,
+      "ramp_mean_w_per_s": 37.23134,
+      "ramp_max_w_per_s": 107.2587,
+      "high_load_fraction": 0.0,
+      "longest_high_seconds": 0.0,
+      "util_mean": 87.86407,
+      "util_std": 5.12567
+    },
+    "description": "평균 전력이 정상 기준선보다 크게 높게 지속됨. 전력이 비교적 평평함 (swing ratio 0.19, 변동 적음). high/low 전환이 불규칙하고 예측하기 어려움. 지속적이고 뚜렷한 주기성 존재 (강도 0.50).",
+    "rag_top": [
+      [
+        "normal_workloads",
+        0.331
+      ],
+      [
+        "ltma",
+        0.25
+      ],
+      [
+        "cryptojacking",
+        0.241
+      ]
+    ],
+    "threat_id": "normal_workloads",
+    "anomaly_score": 0.57252,
+    "score_components": {
+      "z_score": 0.57252,
+      "swing": 0.09349,
+      "mean_deviation": 0.4533,
+      "persistence": 0.0,
+      "mechanical_periodicity": 0.19397
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "정상",
+      "closest_match": "normal_workloads",
+      "reason": "(stub) 검색 최상위 문서 'normal_workloads'(유사도 0.331) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-normal-dataloader-104",
+    "attack_id": "syn-normal-dataloader-104",
+    "window_id": "syn-normal-dataloader-104:gpu0:rows200-400",
+    "gpu_id": 0,
+    "window_start": 200,
+    "window_end": 400,
+    "ground_truth": "normal_dataloader_stall",
+    "swing_ratio": 1.128,
+    "z_score": 0.026,
+    "candidate_reasons": [
+      "large_swing"
+    ],
+    "features": {
+      "mean_w": 139.85412,
+      "std_w": 58.28373,
+      "swing_ratio": 1.12776,
+      "cv": 0.41675,
+      "periodicity_strength": 0.94058,
+      "dominant_freq_hz": 5.0,
+      "duty_regularity": 0.0,
+      "n_transitions": 2.0,
+      "ramp_mean_w_per_s": 61.883,
+      "ramp_max_w_per_s": 1296.56875,
+      "high_load_fraction": 0.0,
+      "longest_high_seconds": 0.0,
+      "util_mean": 67.71673,
+      "util_std": 34.23649
+    },
+    "description": "평균 전력은 정상 범위 내로 유지됨. 전력 변동폭이 다소 큼 (swing ratio 1.13). on/off 전환이 거의 없어 지속적인 부하 상태. 지속적이고 뚜렷한 주기성 존재 (강도 0.94). 순간 전력 상승·하강 기울기가 큼.",
+    "rag_top": [
+      [
+        "normal_workloads",
+        0.34
+      ],
+      [
+        "cryptojacking",
+        0.253
+      ],
+      [
+        "ltma",
+        0.249
+      ]
+    ],
+    "threat_id": "normal_workloads",
+    "anomaly_score": 0.56388,
+    "score_components": {
+      "z_score": 0.00522,
+      "swing": 0.56388,
+      "mean_deviation": 0.16545,
+      "persistence": 0.0,
+      "mechanical_periodicity": 0.0
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "정상",
+      "closest_match": "normal_workloads",
+      "reason": "(stub) 검색 최상위 문서 'normal_workloads'(유사도 0.340) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-normal-dataloader-104",
+    "attack_id": "syn-normal-dataloader-104",
+    "window_id": "syn-normal-dataloader-104:gpu0:rows300-500",
+    "gpu_id": 0,
+    "window_start": 300,
+    "window_end": 500,
+    "ground_truth": "normal_dataloader_stall",
+    "swing_ratio": 1.283,
+    "z_score": 0.504,
+    "candidate_reasons": [
+      "large_swing"
+    ],
+    "features": {
+      "mean_w": 122.67465,
+      "std_w": 64.86992,
+      "swing_ratio": 1.28331,
+      "cv": 0.5288,
+      "periodicity_strength": 0.9077,
+      "dominant_freq_hz": 5.0,
+      "duty_regularity": 0.7358,
+      "n_transitions": 4.0,
+      "ramp_mean_w_per_s": 76.56968,
+      "ramp_max_w_per_s": 1434.44569,
+      "high_load_fraction": 0.0,
+      "longest_high_seconds": 0.0,
+      "util_mean": 57.80214,
+      "util_std": 38.1594
+    },
+    "description": "평균 전력은 정상 범위 내로 유지됨. 전력 변동폭이 다소 큼 (swing ratio 1.28). high/low 전환이 매우 규칙적이고 기계적임. 지속적이고 뚜렷한 주기성 존재 (강도 0.91). 순간 전력 상승·하강 기울기가 큼.",
+    "rag_top": [
+      [
+        "normal_workloads",
+        0.335
+      ],
+      [
+        "swma",
+        0.279
+      ],
+      [
+        "ltma",
+        0.24
+      ]
+    ],
+    "threat_id": "normal_workloads",
+    "anomaly_score": 0.66788,
+    "score_components": {
+      "z_score": 0.10074,
+      "swing": 0.64165,
+      "mean_deviation": 0.02229,
+      "persistence": 0.0,
+      "mechanical_periodicity": 0.66788
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "정상",
+      "closest_match": "normal_workloads",
+      "reason": "(stub) 검색 최상위 문서 'normal_workloads'(유사도 0.335) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-normal-dataloader-104",
+    "attack_id": "syn-normal-dataloader-104",
+    "window_id": "syn-normal-dataloader-104:gpu0:rows400-600",
+    "gpu_id": 0,
+    "window_start": 400,
+    "window_end": 600,
+    "ground_truth": "normal_dataloader_stall",
+    "swing_ratio": 1.218,
+    "z_score": 0.303,
+    "candidate_reasons": [
+      "large_swing"
+    ],
+    "features": {
+      "mean_w": 134.89475,
+      "std_w": 59.8828,
+      "swing_ratio": 1.21781,
+      "cv": 0.44392,
+      "periodicity_strength": 0.89709,
+      "dominant_freq_hz": 5.0,
+      "duty_regularity": 0.31123,
+      "n_transitions": 4.0,
+      "ramp_mean_w_per_s": 72.36179,
+      "ramp_max_w_per_s": 1434.44569,
+      "high_load_fraction": 0.0,
+      "longest_high_seconds": 0.0,
+      "util_mean": 64.70132,
+      "util_std": 35.32411
+    },
+    "description": "평균 전력은 정상 범위 내로 유지됨. 전력 변동폭이 다소 큼 (swing ratio 1.22). high/low 전환이 불규칙하고 예측하기 어려움. 지속적이고 뚜렷한 주기성 존재 (강도 0.90). 순간 전력 상승·하강 기울기가 큼.",
+    "rag_top": [
+      [
+        "normal_workloads",
+        0.353
+      ],
+      [
+        "ltma",
+        0.26
+      ],
+      [
+        "swma",
+        0.247
+      ]
+    ],
+    "threat_id": "normal_workloads",
+    "anomaly_score": 0.60891,
+    "score_components": {
+      "z_score": 0.06052,
+      "swing": 0.60891,
+      "mean_deviation": 0.12412,
+      "persistence": 0.0,
+      "mechanical_periodicity": 0.2792
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "정상",
+      "closest_match": "normal_workloads",
+      "reason": "(stub) 검색 최상위 문서 'normal_workloads'(유사도 0.353) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-normal-dataloader-104",
+    "attack_id": "syn-normal-dataloader-104",
+    "window_id": "syn-normal-dataloader-104:gpu0:rows500-700",
+    "gpu_id": 0,
+    "window_start": 500,
+    "window_end": 700,
+    "ground_truth": "normal_dataloader_stall",
+    "swing_ratio": 1.339,
+    "z_score": 0.673,
+    "candidate_reasons": [
+      "large_swing"
+    ],
+    "features": {
+      "mean_w": 124.86194,
+      "std_w": 62.24214,
+      "swing_ratio": 1.33857,
+      "cv": 0.49849,
+      "periodicity_strength": 0.86474,
+      "dominant_freq_hz": 5.0,
+      "duty_regularity": 0.5509,
+      "n_transitions": 6.0,
+      "ramp_mean_w_per_s": 90.43994,
+      "ramp_max_w_per_s": 1338.69535,
+      "high_load_fraction": 0.0,
+      "longest_high_seconds": 0.0,
+      "util_mean": 58.64229,
+      "util_std": 36.57223
+    },
+    "description": "평균 전력은 정상 범위 내로 유지됨. 전력 변동폭이 다소 큼 (swing ratio 1.34). high/low 전환이 불규칙하고 예측하기 어려움. 지속적이고 뚜렷한 주기성 존재 (강도 0.86). 순간 전력 상승·하강 기울기가 큼.",
+    "rag_top": [
+      [
+        "normal_workloads",
+        0.353
+      ],
+      [
+        "ltma",
+        0.26
+      ],
+      [
+        "swma",
+        0.247
+      ]
+    ],
+    "threat_id": "normal_workloads",
+    "anomaly_score": 0.66928,
+    "score_components": {
+      "z_score": 0.13467,
+      "swing": 0.66928,
+      "mean_deviation": 0.04052,
+      "persistence": 0.0,
+      "mechanical_periodicity": 0.47638
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "정상",
+      "closest_match": "normal_workloads",
+      "reason": "(stub) 검색 최상위 문서 'normal_workloads'(유사도 0.353) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-normal-dataloader-104",
+    "attack_id": "syn-normal-dataloader-104",
+    "window_id": "syn-normal-dataloader-104:gpu0:rows600-800",
+    "gpu_id": 0,
+    "window_start": 600,
+    "window_end": 800,
+    "ground_truth": "normal_dataloader_stall",
+    "swing_ratio": 1.116,
+    "z_score": -0.011,
+    "candidate_reasons": [
+      "large_swing"
+    ],
+    "features": {
+      "mean_w": 147.40333,
+      "std_w": 52.92229,
+      "swing_ratio": 1.11558,
+      "cv": 0.35903,
+      "periodicity_strength": 0.87103,
+      "dominant_freq_hz": 5.0,
+      "duty_regularity": 0.41875,
+      "n_transitions": 4.0,
+      "ramp_mean_w_per_s": 69.69089,
+      "ramp_max_w_per_s": 1338.69535,
+      "high_load_fraction": 0.0,
+      "longest_high_seconds": 0.0,
+      "util_mean": 72.00907,
+      "util_std": 31.13066
+    },
+    "description": "평균 전력은 정상 범위 내로 유지됨. 전력 변동폭이 다소 큼 (swing ratio 1.12). high/low 전환이 불규칙하고 예측하기 어려움. 지속적이고 뚜렷한 주기성 존재 (강도 0.87). 순간 전력 상승·하강 기울기가 큼.",
+    "rag_top": [
+      [
+        "normal_workloads",
+        0.353
+      ],
+      [
+        "ltma",
+        0.26
+      ],
+      [
+        "swma",
+        0.247
+      ]
+    ],
+    "threat_id": "normal_workloads",
+    "anomaly_score": 0.55779,
+    "score_components": {
+      "z_score": 0.00227,
+      "swing": 0.55779,
+      "mean_deviation": 0.22836,
+      "persistence": 0.0,
+      "mechanical_periodicity": 0.36474
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "정상",
+      "closest_match": "normal_workloads",
+      "reason": "(stub) 검색 최상위 문서 'normal_workloads'(유사도 0.353) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-normal-dataloader-104",
+    "attack_id": "syn-normal-dataloader-104",
+    "window_id": "syn-normal-dataloader-104:gpu0:rows700-900",
+    "gpu_id": 0,
+    "window_start": 700,
+    "window_end": 900,
+    "ground_truth": "normal_dataloader_stall",
+    "swing_ratio": 1.111,
+    "z_score": -0.024,
+    "candidate_reasons": [
+      "large_swing",
+      "mechanical_periodicity"
+    ],
+    "features": {
+      "mean_w": 144.87207,
+      "std_w": 54.92839,
+      "swing_ratio": 1.11138,
+      "cv": 0.37915,
+      "periodicity_strength": 0.88606,
+      "dominant_freq_hz": 5.0,
+      "duty_regularity": 0.98765,
+      "n_transitions": 3.0,
+      "ramp_mean_w_per_s": 67.92027,
+      "ramp_max_w_per_s": 1376.02834,
+      "high_load_fraction": 0.0,
+      "longest_high_seconds": 0.0,
+      "util_mean": 70.65734,
+      "util_std": 32.08901
+    },
+    "description": "평균 전력은 정상 범위 내로 유지됨. 전력 변동폭이 다소 큼 (swing ratio 1.11). high/low 전환이 매우 규칙적이고 기계적임. 지속적이고 뚜렷한 주기성 존재 (강도 0.89). 순간 전력 상승·하강 기울기가 큼.",
+    "rag_top": [
+      [
+        "normal_workloads",
+        0.335
+      ],
+      [
+        "swma",
+        0.279
+      ],
+      [
+        "ltma",
+        0.24
+      ]
+    ],
+    "threat_id": "normal_workloads",
+    "anomaly_score": 0.87512,
+    "score_components": {
+      "z_score": 0.00485,
+      "swing": 0.55569,
+      "mean_deviation": 0.20727,
+      "persistence": 0.0,
+      "mechanical_periodicity": 0.87512
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "정상",
+      "closest_match": "normal_workloads",
+      "reason": "(stub) 검색 최상위 문서 'normal_workloads'(유사도 0.335) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-normal-dataloader-104",
+    "attack_id": "syn-normal-dataloader-104",
+    "window_id": "syn-normal-dataloader-104:gpu0:rows800-1000",
+    "gpu_id": 0,
+    "window_start": 800,
+    "window_end": 1000,
+    "ground_truth": "normal_dataloader_stall",
+    "swing_ratio": 1.321,
+    "z_score": 0.62,
+    "candidate_reasons": [
+      "large_swing"
+    ],
+    "features": {
+      "mean_w": 119.98219,
+      "std_w": 64.19096,
+      "swing_ratio": 1.32111,
+      "cv": 0.535,
+      "periodicity_strength": 0.85755,
+      "dominant_freq_hz": 5.0,
+      "duty_regularity": 0.63995,
+      "n_transitions": 6.0,
+      "ramp_mean_w_per_s": 94.81561,
+      "ramp_max_w_per_s": 1376.02834,
+      "high_load_fraction": 0.0,
+      "longest_high_seconds": 0.0,
+      "util_mean": 56.09904,
+      "util_std": 37.50303
+    },
+    "description": "평균 전력은 정상 범위 내로 유지됨. 전력 변동폭이 다소 큼 (swing ratio 1.32). high/low 전환이 매우 규칙적이고 기계적임. 지속적이고 뚜렷한 주기성 존재 (강도 0.86). 순간 전력 상승·하강 기울기가 큼.",
+    "rag_top": [
+      [
+        "normal_workloads",
+        0.335
+      ],
+      [
+        "swma",
+        0.279
+      ],
+      [
+        "ltma",
+        0.24
+      ]
+    ],
+    "threat_id": "normal_workloads",
+    "anomaly_score": 0.66055,
+    "score_components": {
+      "z_score": 0.12395,
+      "swing": 0.66055,
+      "mean_deviation": 0.00015,
+      "persistence": 0.0,
+      "mechanical_periodicity": 0.5488
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "정상",
+      "closest_match": "normal_workloads",
+      "reason": "(stub) 검색 최상위 문서 'normal_workloads'(유사도 0.335) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-normal-dataloader-104",
+    "attack_id": "syn-normal-dataloader-104",
+    "window_id": "syn-normal-dataloader-104:gpu0:rows900-1100",
+    "gpu_id": 0,
+    "window_start": 900,
+    "window_end": 1100,
+    "ground_truth": "normal_dataloader_stall",
+    "swing_ratio": 1.221,
+    "z_score": 0.314,
+    "candidate_reasons": [
+      "large_swing"
+    ],
+    "features": {
+      "mean_w": 132.53357,
+      "std_w": 60.84289,
+      "swing_ratio": 1.2215,
+      "cv": 0.45908,
+      "periodicity_strength": 0.86277,
+      "dominant_freq_hz": 5.0,
+      "duty_regularity": 0.43891,
+      "n_transitions": 5.0,
+      "ramp_mean_w_per_s": 79.4621,
+      "ramp_max_w_per_s": 1346.70332,
+      "high_load_fraction": 0.0,
+      "longest_high_seconds": 0.0,
+      "util_mean": 63.40776,
+      "util_std": 35.56643
+    },
+    "description": "평균 전력은 정상 범위 내로 유지됨. 전력 변동폭이 다소 큼 (swing ratio 1.22). high/low 전환이 불규칙하고 예측하기 어려움. 지속적이고 뚜렷한 주기성 존재 (강도 0.86). 순간 전력 상승·하강 기울기가 큼.",
+    "rag_top": [
+      [
+        "normal_workloads",
+        0.352
+      ],
+      [
+        "ltma",
+        0.26
+      ],
+      [
+        "swma",
+        0.247
+      ]
+    ],
+    "threat_id": "normal_workloads",
+    "anomaly_score": 0.61075,
+    "score_components": {
+      "z_score": 0.06278,
+      "swing": 0.61075,
+      "mean_deviation": 0.10445,
+      "persistence": 0.0,
+      "mechanical_periodicity": 0.37868
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "정상",
+      "closest_match": "normal_workloads",
+      "reason": "(stub) 검색 최상위 문서 'normal_workloads'(유사도 0.352) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-normal-dataloader-104",
+    "attack_id": "syn-normal-dataloader-104",
+    "window_id": "syn-normal-dataloader-104:gpu0:rows1000-1200",
+    "gpu_id": 0,
+    "window_start": 1000,
+    "window_end": 1200,
+    "ground_truth": "normal_dataloader_stall",
+    "swing_ratio": 1.343,
+    "z_score": 0.686,
+    "candidate_reasons": [
+      "large_swing"
+    ],
+    "features": {
+      "mean_w": 121.15166,
+      "std_w": 63.74508,
+      "swing_ratio": 1.34276,
+      "cv": 0.52616,
+      "periodicity_strength": 0.86232,
+      "dominant_freq_hz": 5.0,
+      "duty_regularity": 0.55129,
+      "n_transitions": 6.0,
+      "ramp_mean_w_per_s": 91.60214,
+      "ramp_max_w_per_s": 1477.72845,
+      "high_load_fraction": 0.0,
+      "longest_high_seconds": 0.0,
+      "util_mean": 56.80599,
+      "util_std": 37.09835
+    },
+    "description": "평균 전력은 정상 범위 내로 유지됨. 전력 변동폭이 다소 큼 (swing ratio 1.34). high/low 전환이 불규칙하고 예측하기 어려움. 지속적이고 뚜렷한 주기성 존재 (강도 0.86). 순간 전력 상승·하강 기울기가 큼.",
+    "rag_top": [
+      [
+        "normal_workloads",
+        0.353
+      ],
+      [
+        "ltma",
+        0.26
+      ],
+      [
+        "swma",
+        0.247
+      ]
+    ],
+    "threat_id": "normal_workloads",
+    "anomaly_score": 0.67138,
+    "score_components": {
+      "z_score": 0.13725,
+      "swing": 0.67138,
+      "mean_deviation": 0.0096,
+      "persistence": 0.0,
+      "mechanical_periodicity": 0.47539
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "정상",
+      "closest_match": "normal_workloads",
+      "reason": "(stub) 검색 최상위 문서 'normal_workloads'(유사도 0.353) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-attack-swma-200",
+    "attack_id": "swma-periodic-primary",
+    "window_id": "syn-attack-swma-200:gpu0:rows0-200",
+    "gpu_id": 0,
+    "window_start": 0,
+    "window_end": 200,
+    "ground_truth": "swma",
+    "swing_ratio": 1.688,
+    "z_score": 1.287,
+    "candidate_reasons": [
+      "large_swing",
+      "mechanical_periodicity"
+    ],
+    "features": {
+      "mean_w": 183.55519,
+      "std_w": 146.25905,
+      "swing_ratio": 1.68787,
+      "cv": 0.79681,
+      "periodicity_strength": 0.9004,
+      "dominant_freq_hz": 0.5,
+      "duty_regularity": 1.0,
+      "n_transitions": 19.0,
+      "ramp_mean_w_per_s": 314.44644,
+      "ramp_max_w_per_s": 3028.01987,
+      "high_load_fraction": 0.5,
+      "longest_high_seconds": 1.0,
+      "util_mean": 49.6384,
+      "util_std": 48.51479
+    },
+    "description": "평균 전력이 정상 기준선보다 크게 높게 지속됨. 전력 변동폭이 매우 큼 (swing ratio 1.69). high/low 전환이 매우 규칙적이고 기계적임. 지속적이고 뚜렷한 주기성 존재 (강도 0.90). 순간 전력 상승·하강 기울기가 큼.",
+    "rag_top": [
+      [
+        "swma",
+        0.411
+      ],
+      [
+        "ltma",
+        0.238
+      ],
+      [
+        "cryptojacking",
+        0.219
+      ]
+    ],
+    "threat_id": "swma",
+    "anomaly_score": 0.9004,
+    "score_components": {
+      "z_score": 0.25738,
+      "swing": 0.84394,
+      "mean_deviation": 0.52963,
+      "persistence": 0.5,
+      "mechanical_periodicity": 0.9004
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "의심",
+      "closest_match": "swma",
+      "reason": "(stub) 검색 최상위 문서 'swma'(유사도 0.411) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-attack-swma-200",
+    "attack_id": "swma-periodic-primary",
+    "window_id": "syn-attack-swma-200:gpu0:rows100-300",
+    "gpu_id": 0,
+    "window_start": 100,
+    "window_end": 300,
+    "ground_truth": "swma",
+    "swing_ratio": 1.683,
+    "z_score": 0.815,
+    "candidate_reasons": [
+      "large_swing",
+      "mechanical_periodicity"
+    ],
+    "features": {
+      "mean_w": 183.43002,
+      "std_w": 146.33756,
+      "swing_ratio": 1.68276,
+      "cv": 0.79778,
+      "periodicity_strength": 0.89884,
+      "dominant_freq_hz": 0.5,
+      "duty_regularity": 1.0,
+      "n_transitions": 19.0,
+      "ramp_mean_w_per_s": 312.97815,
+      "ramp_max_w_per_s": 3012.6827,
+      "high_load_fraction": 0.5,
+      "longest_high_seconds": 1.0,
+      "util_mean": 49.59459,
+      "util_std": 48.43432
+    },
+    "description": "평균 전력이 정상 기준선보다 크게 높게 지속됨. 전력 변동폭이 매우 큼 (swing ratio 1.68). high/low 전환이 매우 규칙적이고 기계적임. 지속적이고 뚜렷한 주기성 존재 (강도 0.90). 순간 전력 상승·하강 기울기가 큼.",
+    "rag_top": [
+      [
+        "swma",
+        0.411
+      ],
+      [
+        "ltma",
+        0.238
+      ],
+      [
+        "cryptojacking",
+        0.219
+      ]
+    ],
+    "threat_id": "swma",
+    "anomaly_score": 0.89884,
+    "score_components": {
+      "z_score": 0.163,
+      "swing": 0.84138,
+      "mean_deviation": 0.52858,
+      "persistence": 0.5,
+      "mechanical_periodicity": 0.89884
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "의심",
+      "closest_match": "swma",
+      "reason": "(stub) 검색 최상위 문서 'swma'(유사도 0.411) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-attack-swma-200",
+    "attack_id": "swma-periodic-primary",
+    "window_id": "syn-attack-swma-200:gpu0:rows200-400",
+    "gpu_id": 0,
+    "window_start": 200,
+    "window_end": 400,
+    "ground_truth": "swma",
+    "swing_ratio": 1.657,
+    "z_score": -1.522,
+    "candidate_reasons": [
+      "large_swing",
+      "mechanical_periodicity"
+    ],
+    "features": {
+      "mean_w": 183.93845,
+      "std_w": 146.42786,
+      "swing_ratio": 1.65742,
+      "cv": 0.79607,
+      "periodicity_strength": 0.89943,
+      "dominant_freq_hz": 0.5,
+      "duty_regularity": 1.0,
+      "n_transitions": 19.0,
+      "ramp_mean_w_per_s": 311.17912,
+      "ramp_max_w_per_s": 3012.6827,
+      "high_load_fraction": 0.5,
+      "longest_high_seconds": 1.0,
+      "util_mean": 49.52647,
+      "util_std": 48.38308
+    },
+    "description": "평균 전력이 정상 기준선보다 크게 높게 지속됨. 전력 변동폭이 매우 큼 (swing ratio 1.66). high/low 전환이 매우 규칙적이고 기계적임. 지속적이고 뚜렷한 주기성 존재 (강도 0.90). 순간 전력 상승·하강 기울기가 큼.",
+    "rag_top": [
+      [
+        "swma",
+        0.411
+      ],
+      [
+        "ltma",
+        0.239
+      ],
+      [
+        "cryptojacking",
+        0.218
+      ]
+    ],
+    "threat_id": "swma",
+    "anomaly_score": 0.89943,
+    "score_components": {
+      "z_score": 0.3045,
+      "swing": 0.82871,
+      "mean_deviation": 0.53282,
+      "persistence": 0.5,
+      "mechanical_periodicity": 0.89943
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "의심",
+      "closest_match": "swma",
+      "reason": "(stub) 검색 최상위 문서 'swma'(유사도 0.411) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-attack-swma-200",
+    "attack_id": "swma-periodic-primary",
+    "window_id": "syn-attack-swma-200:gpu0:rows300-500",
+    "gpu_id": 0,
+    "window_start": 300,
+    "window_end": 500,
+    "ground_truth": "swma",
+    "swing_ratio": 1.655,
+    "z_score": -1.735,
+    "candidate_reasons": [
+      "large_swing",
+      "mechanical_periodicity"
+    ],
+    "features": {
+      "mean_w": 184.17136,
+      "std_w": 146.18844,
+      "swing_ratio": 1.65512,
+      "cv": 0.79376,
+      "periodicity_strength": 0.89949,
+      "dominant_freq_hz": 0.5,
+      "duty_regularity": 1.0,
+      "n_transitions": 19.0,
+      "ramp_mean_w_per_s": 311.32109,
+      "ramp_max_w_per_s": 3004.57672,
+      "high_load_fraction": 0.5,
+      "longest_high_seconds": 1.0,
+      "util_mean": 49.52059,
+      "util_std": 48.47676
+    },
+    "description": "평균 전력이 정상 기준선보다 크게 높게 지속됨. 전력 변동폭이 매우 큼 (swing ratio 1.66). high/low 전환이 매우 규칙적이고 기계적임. 지속적이고 뚜렷한 주기성 존재 (강도 0.90). 순간 전력 상승·하강 기울기가 큼.",
+    "rag_top": [
+      [
+        "swma",
+        0.411
+      ],
+      [
+        "ltma",
+        0.239
+      ],
+      [
+        "cryptojacking",
+        0.218
+      ]
+    ],
+    "threat_id": "swma",
+    "anomaly_score": 0.89949,
+    "score_components": {
+      "z_score": 0.34699,
+      "swing": 0.82756,
+      "mean_deviation": 0.53476,
+      "persistence": 0.5,
+      "mechanical_periodicity": 0.89949
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "의심",
+      "closest_match": "swma",
+      "reason": "(stub) 검색 최상위 문서 'swma'(유사도 0.411) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-attack-swma-200",
+    "attack_id": "swma-periodic-primary",
+    "window_id": "syn-attack-swma-200:gpu0:rows400-600",
+    "gpu_id": 0,
+    "window_start": 400,
+    "window_end": 600,
+    "ground_truth": "swma",
+    "swing_ratio": 1.674,
+    "z_score": -0.007,
+    "candidate_reasons": [
+      "large_swing",
+      "mechanical_periodicity"
+    ],
+    "features": {
+      "mean_w": 184.08229,
+      "std_w": 146.11771,
+      "swing_ratio": 1.67384,
+      "cv": 0.79376,
+      "periodicity_strength": 0.89844,
+      "dominant_freq_hz": 0.5,
+      "duty_regularity": 1.0,
+      "n_transitions": 19.0,
+      "ramp_mean_w_per_s": 312.20178,
+      "ramp_max_w_per_s": 3004.57672,
+      "high_load_fraction": 0.5,
+      "longest_high_seconds": 1.0,
+      "util_mean": 49.57162,
+      "util_std": 48.5427
+    },
+    "description": "평균 전력이 정상 기준선보다 크게 높게 지속됨. 전력 변동폭이 매우 큼 (swing ratio 1.67). high/low 전환이 매우 규칙적이고 기계적임. 지속적이고 뚜렷한 주기성 존재 (강도 0.90). 순간 전력 상승·하강 기울기가 큼.",
+    "rag_top": [
+      [
+        "swma",
+        0.411
+      ],
+      [
+        "ltma",
+        0.238
+      ],
+      [
+        "cryptojacking",
+        0.219
+      ]
+    ],
+    "threat_id": "swma",
+    "anomaly_score": 0.89844,
+    "score_components": {
+      "z_score": 0.00143,
+      "swing": 0.83692,
+      "mean_deviation": 0.53402,
+      "persistence": 0.5,
+      "mechanical_periodicity": 0.89844
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "의심",
+      "closest_match": "swma",
+      "reason": "(stub) 검색 최상위 문서 'swma'(유사도 0.411) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-attack-swma-200",
+    "attack_id": "swma-periodic-primary",
+    "window_id": "syn-attack-swma-200:gpu0:rows500-700",
+    "gpu_id": 0,
+    "window_start": 500,
+    "window_end": 700,
+    "ground_truth": "swma",
+    "swing_ratio": 1.671,
+    "z_score": -0.306,
+    "candidate_reasons": [
+      "large_swing",
+      "mechanical_periodicity"
+    ],
+    "features": {
+      "mean_w": 184.16867,
+      "std_w": 145.94977,
+      "swing_ratio": 1.6706,
+      "cv": 0.79248,
+      "periodicity_strength": 0.89976,
+      "dominant_freq_hz": 0.5,
+      "duty_regularity": 1.0,
+      "n_transitions": 19.0,
+      "ramp_mean_w_per_s": 312.71584,
+      "ramp_max_w_per_s": 2988.75278,
+      "high_load_fraction": 0.5,
+      "longest_high_seconds": 1.0,
+      "util_mean": 49.56168,
+      "util_std": 48.39053
+    },
+    "description": "평균 전력이 정상 기준선보다 크게 높게 지속됨. 전력 변동폭이 매우 큼 (swing ratio 1.67). high/low 전환이 매우 규칙적이고 기계적임. 지속적이고 뚜렷한 주기성 존재 (강도 0.90). 순간 전력 상승·하강 기울기가 큼.",
+    "rag_top": [
+      [
+        "swma",
+        0.411
+      ],
+      [
+        "ltma",
+        0.238
+      ],
+      [
+        "cryptojacking",
+        0.219
+      ]
+    ],
+    "threat_id": "swma",
+    "anomaly_score": 0.89976,
+    "score_components": {
+      "z_score": 0.0612,
+      "swing": 0.8353,
+      "mean_deviation": 0.53474,
+      "persistence": 0.5,
+      "mechanical_periodicity": 0.89976
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "의심",
+      "closest_match": "swma",
+      "reason": "(stub) 검색 최상위 문서 'swma'(유사도 0.411) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-attack-swma-200",
+    "attack_id": "swma-periodic-primary",
+    "window_id": "syn-attack-swma-200:gpu0:rows600-800",
+    "gpu_id": 0,
+    "window_start": 600,
+    "window_end": 800,
+    "ground_truth": "swma",
+    "swing_ratio": 1.67,
+    "z_score": -0.329,
+    "candidate_reasons": [
+      "large_swing",
+      "mechanical_periodicity"
+    ],
+    "features": {
+      "mean_w": 184.07369,
+      "std_w": 145.87862,
+      "swing_ratio": 1.67035,
+      "cv": 0.7925,
+      "periodicity_strength": 0.8998,
+      "dominant_freq_hz": 0.5,
+      "duty_regularity": 1.0,
+      "n_transitions": 19.0,
+      "ramp_mean_w_per_s": 310.80093,
+      "ramp_max_w_per_s": 3013.6566,
+      "high_load_fraction": 0.5,
+      "longest_high_seconds": 1.0,
+      "util_mean": 49.50998,
+      "util_std": 48.47281
+    },
+    "description": "평균 전력이 정상 기준선보다 크게 높게 지속됨. 전력 변동폭이 매우 큼 (swing ratio 1.67). high/low 전환이 매우 규칙적이고 기계적임. 지속적이고 뚜렷한 주기성 존재 (강도 0.90). 순간 전력 상승·하강 기울기가 큼.",
+    "rag_top": [
+      [
+        "swma",
+        0.411
+      ],
+      [
+        "ltma",
+        0.238
+      ],
+      [
+        "cryptojacking",
+        0.219
+      ]
+    ],
+    "threat_id": "swma",
+    "anomaly_score": 0.8998,
+    "score_components": {
+      "z_score": 0.06587,
+      "swing": 0.83518,
+      "mean_deviation": 0.53395,
+      "persistence": 0.5,
+      "mechanical_periodicity": 0.8998
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "의심",
+      "closest_match": "swma",
+      "reason": "(stub) 검색 최상위 문서 'swma'(유사도 0.411) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-attack-swma-200",
+    "attack_id": "swma-periodic-primary",
+    "window_id": "syn-attack-swma-200:gpu0:rows700-900",
+    "gpu_id": 0,
+    "window_start": 700,
+    "window_end": 900,
+    "ground_truth": "swma",
+    "swing_ratio": 1.681,
+    "z_score": 0.666,
+    "candidate_reasons": [
+      "large_swing",
+      "mechanical_periodicity"
+    ],
+    "features": {
+      "mean_w": 184.11413,
+      "std_w": 146.09528,
+      "swing_ratio": 1.68115,
+      "cv": 0.7935,
+      "periodicity_strength": 0.89918,
+      "dominant_freq_hz": 0.5,
+      "duty_regularity": 1.0,
+      "n_transitions": 19.0,
+      "ramp_mean_w_per_s": 309.41699,
+      "ramp_max_w_per_s": 3013.6566,
+      "high_load_fraction": 0.5,
+      "longest_high_seconds": 1.0,
+      "util_mean": 49.54915,
+      "util_std": 48.49567
+    },
+    "description": "평균 전력이 정상 기준선보다 크게 높게 지속됨. 전력 변동폭이 매우 큼 (swing ratio 1.68). high/low 전환이 매우 규칙적이고 기계적임. 지속적이고 뚜렷한 주기성 존재 (강도 0.90). 순간 전력 상승·하강 기울기가 큼.",
+    "rag_top": [
+      [
+        "swma",
+        0.411
+      ],
+      [
+        "ltma",
+        0.238
+      ],
+      [
+        "cryptojacking",
+        0.219
+      ]
+    ],
+    "threat_id": "swma",
+    "anomaly_score": 0.89918,
+    "score_components": {
+      "z_score": 0.13329,
+      "swing": 0.84057,
+      "mean_deviation": 0.53428,
+      "persistence": 0.5,
+      "mechanical_periodicity": 0.89918
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "의심",
+      "closest_match": "swma",
+      "reason": "(stub) 검색 최상위 문서 'swma'(유사도 0.411) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-attack-swma-200",
+    "attack_id": "swma-periodic-primary",
+    "window_id": "syn-attack-swma-200:gpu0:rows800-1000",
+    "gpu_id": 0,
+    "window_start": 800,
+    "window_end": 1000,
+    "ground_truth": "swma",
+    "swing_ratio": 1.673,
+    "z_score": -0.089,
+    "candidate_reasons": [
+      "large_swing",
+      "mechanical_periodicity"
+    ],
+    "features": {
+      "mean_w": 183.87028,
+      "std_w": 145.90054,
+      "swing_ratio": 1.67295,
+      "cv": 0.7935,
+      "periodicity_strength": 0.89935,
+      "dominant_freq_hz": 0.5,
+      "duty_regularity": 1.0,
+      "n_transitions": 19.0,
+      "ramp_mean_w_per_s": 310.29765,
+      "ramp_max_w_per_s": 2981.90945,
+      "high_load_fraction": 0.5,
+      "longest_high_seconds": 1.0,
+      "util_mean": 49.55523,
+      "util_std": 48.41531
+    },
+    "description": "평균 전력이 정상 기준선보다 크게 높게 지속됨. 전력 변동폭이 매우 큼 (swing ratio 1.67). high/low 전환이 매우 규칙적이고 기계적임. 지속적이고 뚜렷한 주기성 존재 (강도 0.90). 순간 전력 상승·하강 기울기가 큼.",
+    "rag_top": [
+      [
+        "swma",
+        0.411
+      ],
+      [
+        "ltma",
+        0.238
+      ],
+      [
+        "cryptojacking",
+        0.219
+      ]
+    ],
+    "threat_id": "swma",
+    "anomaly_score": 0.89935,
+    "score_components": {
+      "z_score": 0.01789,
+      "swing": 0.83648,
+      "mean_deviation": 0.53225,
+      "persistence": 0.5,
+      "mechanical_periodicity": 0.89935
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "의심",
+      "closest_match": "swma",
+      "reason": "(stub) 검색 최상위 문서 'swma'(유사도 0.411) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-attack-swma-200",
+    "attack_id": "swma-periodic-primary",
+    "window_id": "syn-attack-swma-200:gpu0:rows900-1100",
+    "gpu_id": 0,
+    "window_start": 900,
+    "window_end": 1100,
+    "ground_truth": "swma",
+    "swing_ratio": 1.673,
+    "z_score": -0.079,
+    "candidate_reasons": [
+      "large_swing",
+      "mechanical_periodicity"
+    ],
+    "features": {
+      "mean_w": 183.57986,
+      "std_w": 145.82814,
+      "swing_ratio": 1.67306,
+      "cv": 0.79436,
+      "periodicity_strength": 0.89983,
+      "dominant_freq_hz": 0.5,
+      "duty_regularity": 1.0,
+      "n_transitions": 19.0,
+      "ramp_mean_w_per_s": 308.82855,
+      "ramp_max_w_per_s": 2990.24505,
+      "high_load_fraction": 0.5,
+      "longest_high_seconds": 1.0,
+      "util_mean": 49.53858,
+      "util_std": 48.3895
+    },
+    "description": "평균 전력이 정상 기준선보다 크게 높게 지속됨. 전력 변동폭이 매우 큼 (swing ratio 1.67). high/low 전환이 매우 규칙적이고 기계적임. 지속적이고 뚜렷한 주기성 존재 (강도 0.90). 순간 전력 상승·하강 기울기가 큼.",
+    "rag_top": [
+      [
+        "swma",
+        0.411
+      ],
+      [
+        "ltma",
+        0.238
+      ],
+      [
+        "cryptojacking",
+        0.219
+      ]
+    ],
+    "threat_id": "swma",
+    "anomaly_score": 0.89983,
+    "score_components": {
+      "z_score": 0.01587,
+      "swing": 0.83653,
+      "mean_deviation": 0.52983,
+      "persistence": 0.5,
+      "mechanical_periodicity": 0.89983
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "의심",
+      "closest_match": "swma",
+      "reason": "(stub) 검색 최상위 문서 'swma'(유사도 0.411) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-attack-swma-200",
+    "attack_id": "swma-periodic-primary",
+    "window_id": "syn-attack-swma-200:gpu0:rows1000-1200",
+    "gpu_id": 0,
+    "window_start": 1000,
+    "window_end": 1200,
+    "ground_truth": "swma",
+    "swing_ratio": 1.688,
+    "z_score": 1.3,
+    "candidate_reasons": [
+      "large_swing",
+      "mechanical_periodicity"
+    ],
+    "features": {
+      "mean_w": 183.73694,
+      "std_w": 145.95726,
+      "swing_ratio": 1.68802,
+      "cv": 0.79438,
+      "periodicity_strength": 0.90078,
+      "dominant_freq_hz": 0.5,
+      "duty_regularity": 1.0,
+      "n_transitions": 19.0,
+      "ramp_mean_w_per_s": 309.64953,
+      "ramp_max_w_per_s": 2990.24505,
+      "high_load_fraction": 0.5,
+      "longest_high_seconds": 1.0,
+      "util_mean": 49.47936,
+      "util_std": 48.35845
+    },
+    "description": "평균 전력이 정상 기준선보다 크게 높게 지속됨. 전력 변동폭이 매우 큼 (swing ratio 1.69). high/low 전환이 매우 규칙적이고 기계적임. 지속적이고 뚜렷한 주기성 존재 (강도 0.90). 순간 전력 상승·하강 기울기가 큼.",
+    "rag_top": [
+      [
+        "swma",
+        0.411
+      ],
+      [
+        "ltma",
+        0.238
+      ],
+      [
+        "cryptojacking",
+        0.219
+      ]
+    ],
+    "threat_id": "swma",
+    "anomaly_score": 0.90078,
+    "score_components": {
+      "z_score": 0.26008,
+      "swing": 0.84401,
+      "mean_deviation": 0.53114,
+      "persistence": 0.5,
+      "mechanical_periodicity": 0.90078
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "의심",
+      "closest_match": "swma",
+      "reason": "(stub) 검색 최상위 문서 'swma'(유사도 0.411) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-attack-ltma-201",
+    "attack_id": "ltma-irregular-primary",
+    "window_id": "syn-attack-ltma-201:gpu0:rows0-200",
+    "gpu_id": 0,
+    "window_start": 0,
+    "window_end": 200,
+    "ground_truth": "ltma",
+    "swing_ratio": 1.414,
+    "z_score": -0.225,
+    "candidate_reasons": [
+      "large_swing"
+    ],
+    "features": {
+      "mean_w": 135.12906,
+      "std_w": 63.4317,
+      "swing_ratio": 1.41399,
+      "cv": 0.46942,
+      "periodicity_strength": 0.92977,
+      "dominant_freq_hz": 5.0,
+      "duty_regularity": 0.67626,
+      "n_transitions": 3.0,
+      "ramp_mean_w_per_s": 73.10217,
+      "ramp_max_w_per_s": 1264.51723,
+      "high_load_fraction": 0.155,
+      "longest_high_seconds": 0.8,
+      "util_mean": 53.69385,
+      "util_std": 35.30005
+    },
+    "description": "평균 전력은 정상 범위 내로 유지됨. 전력 변동폭이 다소 큼 (swing ratio 1.41). high/low 전환이 매우 규칙적이고 기계적임. 지속적이고 뚜렷한 주기성 존재 (강도 0.93). 순간 전력 상승·하강 기울기가 큼.",
+    "rag_top": [
+      [
+        "ltma",
+        0.333
+      ],
+      [
+        "swma",
+        0.276
+      ],
+      [
+        "cryptojacking",
+        0.205
+      ]
+    ],
+    "threat_id": "ltma",
+    "anomaly_score": 0.707,
+    "score_components": {
+      "z_score": 0.045,
+      "swing": 0.707,
+      "mean_deviation": 0.12608,
+      "persistence": 0.155,
+      "mechanical_periodicity": 0.62876
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "주의",
+      "closest_match": "ltma",
+      "reason": "(stub) 검색 최상위 문서 'ltma'(유사도 0.333) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-attack-ltma-201",
+    "attack_id": "ltma-irregular-primary",
+    "window_id": "syn-attack-ltma-201:gpu0:rows100-300",
+    "gpu_id": 0,
+    "window_start": 100,
+    "window_end": 300,
+    "ground_truth": "ltma",
+    "swing_ratio": 1.393,
+    "z_score": -0.328,
+    "candidate_reasons": [
+      "large_swing",
+      "mechanical_periodicity"
+    ],
+    "features": {
+      "mean_w": 133.5201,
+      "std_w": 66.53641,
+      "swing_ratio": 1.39289,
+      "cv": 0.49833,
+      "periodicity_strength": 0.91209,
+      "dominant_freq_hz": 5.0,
+      "duty_regularity": 0.82435,
+      "n_transitions": 4.0,
+      "ramp_mean_w_per_s": 80.24689,
+      "ramp_max_w_per_s": 1431.62867,
+      "high_load_fraction": 0.2,
+      "longest_high_seconds": 1.0,
+      "util_mean": 53.03253,
+      "util_std": 36.69425
+    },
+    "description": "평균 전력은 정상 범위 내로 유지됨. 전력 변동폭이 다소 큼 (swing ratio 1.39). high/low 전환이 매우 규칙적이고 기계적임. 지속적이고 뚜렷한 주기성 존재 (강도 0.91). 순간 전력 상승·하강 기울기가 큼.",
+    "rag_top": [
+      [
+        "ltma",
+        0.333
+      ],
+      [
+        "swma",
+        0.276
+      ],
+      [
+        "cryptojacking",
+        0.205
+      ]
+    ],
+    "threat_id": "ltma",
+    "anomaly_score": 0.75188,
+    "score_components": {
+      "z_score": 0.06562,
+      "swing": 0.69645,
+      "mean_deviation": 0.11267,
+      "persistence": 0.2,
+      "mechanical_periodicity": 0.75188
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "주의",
+      "closest_match": "ltma",
+      "reason": "(stub) 검색 최상위 문서 'ltma'(유사도 0.333) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-attack-ltma-201",
+    "attack_id": "ltma-irregular-primary",
+    "window_id": "syn-attack-ltma-201:gpu0:rows200-400",
+    "gpu_id": 0,
+    "window_start": 200,
+    "window_end": 400,
+    "ground_truth": "ltma",
+    "swing_ratio": 1.37,
+    "z_score": -0.439,
+    "candidate_reasons": [
+      "large_swing"
+    ],
+    "features": {
+      "mean_w": 130.53006,
+      "std_w": 57.717,
+      "swing_ratio": 1.37013,
+      "cv": 0.44217,
+      "periodicity_strength": 0.86233,
+      "dominant_freq_hz": 5.0,
+      "duty_regularity": 0.25097,
+      "n_transitions": 7.0,
+      "ramp_mean_w_per_s": 84.88882,
+      "ramp_max_w_per_s": 1431.62867,
+      "high_load_fraction": 0.135,
+      "longest_high_seconds": 1.0,
+      "util_mean": 51.33769,
+      "util_std": 31.3617
+    },
+    "description": "평균 전력은 정상 범위 내로 유지됨. 전력 변동폭이 다소 큼 (swing ratio 1.37). high/low 전환이 불규칙하고 예측하기 어려움. 지속적이고 뚜렷한 주기성 존재 (강도 0.86). 순간 전력 상승·하강 기울기가 큼.",
+    "rag_top": [
+      [
+        "ltma",
+        0.349
+      ],
+      [
+        "swma",
+        0.243
+      ],
+      [
+        "cryptojacking",
+        0.204
+      ]
+    ],
+    "threat_id": "ltma",
+    "anomaly_score": 0.68507,
+    "score_components": {
+      "z_score": 0.08787,
+      "swing": 0.68507,
+      "mean_deviation": 0.08775,
+      "persistence": 0.135,
+      "mechanical_periodicity": 0.21642
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "주의",
+      "closest_match": "ltma",
+      "reason": "(stub) 검색 최상위 문서 'ltma'(유사도 0.349) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-attack-ltma-201",
+    "attack_id": "ltma-irregular-primary",
+    "window_id": "syn-attack-ltma-201:gpu0:rows300-500",
+    "gpu_id": 0,
+    "window_start": 300,
+    "window_end": 500,
+    "ground_truth": "ltma",
+    "swing_ratio": 1.335,
+    "z_score": -0.609,
+    "candidate_reasons": [
+      "large_swing"
+    ],
+    "features": {
+      "mean_w": 125.77736,
+      "std_w": 47.05022,
+      "swing_ratio": 1.33539,
+      "cv": 0.37408,
+      "periodicity_strength": 0.88566,
+      "dominant_freq_hz": 5.0,
+      "duty_regularity": 0.0,
+      "n_transitions": 10.0,
+      "ramp_mean_w_per_s": 76.44253,
+      "ramp_max_w_per_s": 1375.13578,
+      "high_load_fraction": 0.05,
+      "longest_high_seconds": 0.5,
+      "util_mean": 48.44872,
+      "util_std": 26.38836
+    },
+    "description": "평균 전력은 정상 범위 내로 유지됨. 전력 변동폭이 다소 큼 (swing ratio 1.34). high/low 전환이 불규칙하고 예측하기 어려움. 지속적이고 뚜렷한 주기성 존재 (강도 0.89). 순간 전력 상승·하강 기울기가 큼.",
+    "rag_top": [
+      [
+        "ltma",
+        0.348
+      ],
+      [
+        "swma",
+        0.243
+      ],
+      [
+        "cryptojacking",
+        0.205
+      ]
+    ],
+    "threat_id": "ltma",
+    "anomaly_score": 0.66769,
+    "score_components": {
+      "z_score": 0.12183,
+      "swing": 0.66769,
+      "mean_deviation": 0.04814,
+      "persistence": 0.05,
+      "mechanical_periodicity": 0.0
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "주의",
+      "closest_match": "ltma",
+      "reason": "(stub) 검색 최상위 문서 'ltma'(유사도 0.348) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-attack-ltma-201",
+    "attack_id": "ltma-irregular-primary",
+    "window_id": "syn-attack-ltma-201:gpu0:rows400-600",
+    "gpu_id": 0,
+    "window_start": 400,
+    "window_end": 600,
+    "ground_truth": "ltma",
+    "swing_ratio": 1.77,
+    "z_score": 1.513,
+    "candidate_reasons": [
+      "large_swing",
+      "mechanical_periodicity"
+    ],
+    "features": {
+      "mean_w": 107.58585,
+      "std_w": 52.96341,
+      "swing_ratio": 1.76963,
+      "cv": 0.49229,
+      "periodicity_strength": 0.90027,
+      "dominant_freq_hz": 5.0,
+      "duty_regularity": 0.86154,
+      "n_transitions": 3.0,
+      "ramp_mean_w_per_s": 73.84803,
+      "ramp_max_w_per_s": 1197.46012,
+      "high_load_fraction": 0.02,
+      "longest_high_seconds": 0.2,
+      "util_mean": 39.41138,
+      "util_std": 29.43098
+    },
+    "description": "평균 전력은 정상 범위 내로 유지됨. 전력 변동폭이 매우 큼 (swing ratio 1.77). high/low 전환이 매우 규칙적이고 기계적임. 지속적이고 뚜렷한 주기성 존재 (강도 0.90). 순간 전력 상승·하강 기울기가 큼.",
+    "rag_top": [
+      [
+        "ltma",
+        0.328
+      ],
+      [
+        "swma",
+        0.28
+      ],
+      [
+        "cryptojacking",
+        0.207
+      ]
+    ],
+    "threat_id": "ltma",
+    "anomaly_score": 0.88482,
+    "score_components": {
+      "z_score": 0.30263,
+      "swing": 0.88482,
+      "mean_deviation": 0.10345,
+      "persistence": 0.02,
+      "mechanical_periodicity": 0.77562
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "주의",
+      "closest_match": "ltma",
+      "reason": "(stub) 검색 최상위 문서 'ltma'(유사도 0.328) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-attack-ltma-201",
+    "attack_id": "ltma-irregular-primary",
+    "window_id": "syn-attack-ltma-201:gpu0:rows500-700",
+    "gpu_id": 0,
+    "window_start": 500,
+    "window_end": 700,
+    "ground_truth": "ltma",
+    "swing_ratio": 1.336,
+    "z_score": -0.605,
+    "candidate_reasons": [
+      "large_swing",
+      "mechanical_periodicity"
+    ],
+    "features": {
+      "mean_w": 120.40467,
+      "std_w": 54.6364,
+      "swing_ratio": 1.33632,
+      "cv": 0.45377,
+      "periodicity_strength": 0.90973,
+      "dominant_freq_hz": 5.0,
+      "duty_regularity": 0.76923,
+      "n_transitions": 3.0,
+      "ramp_mean_w_per_s": 76.83689,
+      "ramp_max_w_per_s": 1197.46012,
+      "high_load_fraction": 0.0,
+      "longest_high_seconds": 0.0,
+      "util_mean": 46.48053,
+      "util_std": 29.70526
+    },
+    "description": "평균 전력은 정상 범위 내로 유지됨. 전력 변동폭이 다소 큼 (swing ratio 1.34). high/low 전환이 매우 규칙적이고 기계적임. 지속적이고 뚜렷한 주기성 존재 (강도 0.91). 순간 전력 상승·하강 기울기가 큼.",
+    "rag_top": [
+      [
+        "ltma",
+        0.333
+      ],
+      [
+        "swma",
+        0.276
+      ],
+      [
+        "cryptojacking",
+        0.205
+      ]
+    ],
+    "threat_id": "ltma",
+    "anomaly_score": 0.69979,
+    "score_components": {
+      "z_score": 0.12092,
+      "swing": 0.66816,
+      "mean_deviation": 0.00337,
+      "persistence": 0.0,
+      "mechanical_periodicity": 0.69979
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "주의",
+      "closest_match": "ltma",
+      "reason": "(stub) 검색 최상위 문서 'ltma'(유사도 0.333) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-attack-ltma-201",
+    "attack_id": "ltma-irregular-primary",
+    "window_id": "syn-attack-ltma-201:gpu0:rows600-800",
+    "gpu_id": 0,
+    "window_start": 600,
+    "window_end": 800,
+    "ground_truth": "ltma",
+    "swing_ratio": 1.408,
+    "z_score": -0.252,
+    "candidate_reasons": [
+      "large_swing"
+    ],
+    "features": {
+      "mean_w": 119.58218,
+      "std_w": 53.95384,
+      "swing_ratio": 1.40841,
+      "cv": 0.45119,
+      "periodicity_strength": 0.87892,
+      "dominant_freq_hz": 5.0,
+      "duty_regularity": 0.529,
+      "n_transitions": 4.0,
+      "ramp_mean_w_per_s": 77.06704,
+      "ramp_max_w_per_s": 1188.37048,
+      "high_load_fraction": 0.0,
+      "longest_high_seconds": 0.0,
+      "util_mean": 43.85923,
+      "util_std": 30.52636
+    },
+    "description": "평균 전력은 정상 범위 내로 유지됨. 전력 변동폭이 다소 큼 (swing ratio 1.41). high/low 전환이 불규칙하고 예측하기 어려움. 지속적이고 뚜렷한 주기성 존재 (강도 0.88). 순간 전력 상승·하강 기울기가 큼.",
+    "rag_top": [
+      [
+        "ltma",
+        0.348
+      ],
+      [
+        "swma",
+        0.243
+      ],
+      [
+        "cryptojacking",
+        0.205
+      ]
+    ],
+    "threat_id": "ltma",
+    "anomaly_score": 0.7042,
+    "score_components": {
+      "z_score": 0.05046,
+      "swing": 0.7042,
+      "mean_deviation": 0.00348,
+      "persistence": 0.0,
+      "mechanical_periodicity": 0.46495
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "주의",
+      "closest_match": "ltma",
+      "reason": "(stub) 검색 최상위 문서 'ltma'(유사도 0.348) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-attack-ltma-201",
+    "attack_id": "ltma-irregular-primary",
+    "window_id": "syn-attack-ltma-201:gpu0:rows700-900",
+    "gpu_id": 0,
+    "window_start": 700,
+    "window_end": 900,
+    "ground_truth": "ltma",
+    "swing_ratio": 1.631,
+    "z_score": 0.835,
+    "candidate_reasons": [
+      "large_swing"
+    ],
+    "features": {
+      "mean_w": 99.12187,
+      "std_w": 58.85602,
+      "swing_ratio": 1.63082,
+      "cv": 0.59377,
+      "periodicity_strength": 0.87859,
+      "dominant_freq_hz": 5.0,
+      "duty_regularity": 0.42265,
+      "n_transitions": 5.0,
+      "ramp_mean_w_per_s": 77.89713,
+      "ramp_max_w_per_s": 1403.88715,
+      "high_load_fraction": 0.0,
+      "longest_high_seconds": 0.0,
+      "util_mean": 32.53858,
+      "util_std": 33.20323
+    },
+    "description": "평균 전력은 정상 범위 내로 유지됨. 전력 변동폭이 매우 큼 (swing ratio 1.63). high/low 전환이 불규칙하고 예측하기 어려움. 지속적이고 뚜렷한 주기성 존재 (강도 0.88). 순간 전력 상승·하강 기울기가 큼.",
+    "rag_top": [
+      [
+        "ltma",
+        0.346
+      ],
+      [
+        "swma",
+        0.249
+      ],
+      [
+        "cryptojacking",
+        0.208
+      ]
+    ],
+    "threat_id": "ltma",
+    "anomaly_score": 0.81541,
+    "score_components": {
+      "z_score": 0.16694,
+      "swing": 0.81541,
+      "mean_deviation": 0.17398,
+      "persistence": 0.0,
+      "mechanical_periodicity": 0.37134
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "주의",
+      "closest_match": "ltma",
+      "reason": "(stub) 검색 최상위 문서 'ltma'(유사도 0.346) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-attack-ltma-201",
+    "attack_id": "ltma-irregular-primary",
+    "window_id": "syn-attack-ltma-201:gpu0:rows800-1000",
+    "gpu_id": 0,
+    "window_start": 800,
+    "window_end": 1000,
+    "ground_truth": "ltma",
+    "swing_ratio": 1.173,
+    "z_score": -1.401,
+    "candidate_reasons": [
+      "large_swing"
+    ],
+    "features": {
+      "mean_w": 136.23563,
+      "std_w": 54.86299,
+      "swing_ratio": 1.17327,
+      "cv": 0.40271,
+      "periodicity_strength": 0.89587,
+      "dominant_freq_hz": 5.0,
+      "duty_regularity": 0.72,
+      "n_transitions": 3.0,
+      "ramp_mean_w_per_s": 68.53811,
+      "ramp_max_w_per_s": 1403.88715,
+      "high_load_fraction": 0.0,
+      "longest_high_seconds": 0.0,
+      "util_mean": 54.39529,
+      "util_std": 31.69115
+    },
+    "description": "평균 전력은 정상 범위 내로 유지됨. 전력 변동폭이 다소 큼 (swing ratio 1.17). high/low 전환이 매우 규칙적이고 기계적임. 지속적이고 뚜렷한 주기성 존재 (강도 0.90). 순간 전력 상승·하강 기울기가 큼.",
+    "rag_top": [
+      [
+        "ltma",
+        0.333
+      ],
+      [
+        "swma",
+        0.276
+      ],
+      [
+        "cryptojacking",
+        0.205
+      ]
+    ],
+    "threat_id": "ltma",
+    "anomaly_score": 0.64503,
+    "score_components": {
+      "z_score": 0.2803,
+      "swing": 0.58663,
+      "mean_deviation": 0.1353,
+      "persistence": 0.0,
+      "mechanical_periodicity": 0.64503
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "주의",
+      "closest_match": "ltma",
+      "reason": "(stub) 검색 최상위 문서 'ltma'(유사도 0.333) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-attack-ltma-201",
+    "attack_id": "ltma-irregular-primary",
+    "window_id": "syn-attack-ltma-201:gpu0:rows900-1100",
+    "gpu_id": 0,
+    "window_start": 900,
+    "window_end": 1100,
+    "ground_truth": "ltma",
+    "swing_ratio": 1.375,
+    "z_score": -0.417,
+    "candidate_reasons": [
+      "large_swing",
+      "mechanical_periodicity"
+    ],
+    "features": {
+      "mean_w": 124.40092,
+      "std_w": 60.68912,
+      "swing_ratio": 1.3746,
+      "cv": 0.48785,
+      "periodicity_strength": 0.91975,
+      "dominant_freq_hz": 5.0,
+      "duty_regularity": 0.91429,
+      "n_transitions": 3.0,
+      "ramp_mean_w_per_s": 66.87497,
+      "ramp_max_w_per_s": 1372.08184,
+      "high_load_fraction": 0.0,
+      "longest_high_seconds": 0.0,
+      "util_mean": 49.14991,
+      "util_std": 32.45301
+    },
+    "description": "평균 전력은 정상 범위 내로 유지됨. 전력 변동폭이 다소 큼 (swing ratio 1.37). high/low 전환이 매우 규칙적이고 기계적임. 지속적이고 뚜렷한 주기성 존재 (강도 0.92). 순간 전력 상승·하강 기울기가 큼.",
+    "rag_top": [
+      [
+        "ltma",
+        0.333
+      ],
+      [
+        "swma",
+        0.276
+      ],
+      [
+        "cryptojacking",
+        0.205
+      ]
+    ],
+    "threat_id": "ltma",
+    "anomaly_score": 0.84092,
+    "score_components": {
+      "z_score": 0.0835,
+      "swing": 0.6873,
+      "mean_deviation": 0.03667,
+      "persistence": 0.0,
+      "mechanical_periodicity": 0.84092
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "주의",
+      "closest_match": "ltma",
+      "reason": "(stub) 검색 최상위 문서 'ltma'(유사도 0.333) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-attack-ltma-201",
+    "attack_id": "ltma-irregular-primary",
+    "window_id": "syn-attack-ltma-201:gpu0:rows1000-1200",
+    "gpu_id": 0,
+    "window_start": 1000,
+    "window_end": 1200,
+    "ground_truth": "ltma",
+    "swing_ratio": 1.855,
+    "z_score": 1.93,
+    "candidate_reasons": [
+      "large_swing"
+    ],
+    "features": {
+      "mean_w": 91.57059,
+      "std_w": 56.58237,
+      "swing_ratio": 1.85485,
+      "cv": 0.61791,
+      "periodicity_strength": 0.86288,
+      "dominant_freq_hz": 5.0,
+      "duty_regularity": 0.54298,
+      "n_transitions": 5.0,
+      "ramp_mean_w_per_s": 78.43846,
+      "ramp_max_w_per_s": 1413.07086,
+      "high_load_fraction": 0.0,
+      "longest_high_seconds": 0.0,
+      "util_mean": 30.31935,
+      "util_std": 30.40536
+    },
+    "description": "평균 전력이 정상 기준선보다 낮음. 전력 변동폭이 매우 큼 (swing ratio 1.85). high/low 전환이 불규칙하고 예측하기 어려움. 지속적이고 뚜렷한 주기성 존재 (강도 0.86). 순간 전력 상승·하강 기울기가 큼.",
+    "rag_top": [
+      [
+        "ltma",
+        0.346
+      ],
+      [
+        "swma",
+        0.262
+      ],
+      [
+        "normal_workloads",
+        0.213
+      ]
+    ],
+    "threat_id": "ltma",
+    "anomaly_score": 0.92743,
+    "score_components": {
+      "z_score": 0.38593,
+      "swing": 0.92743,
+      "mean_deviation": 0.23691,
+      "persistence": 0.0,
+      "mechanical_periodicity": 0.46853
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "주의",
+      "closest_match": "ltma",
+      "reason": "(stub) 검색 최상위 문서 'ltma'(유사도 0.346) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-attack-crypto-202",
+    "attack_id": "cryptojacking-steady-primary",
+    "window_id": "syn-attack-crypto-202:gpu0:rows0-200",
+    "gpu_id": 0,
+    "window_start": 0,
+    "window_end": 200,
+    "ground_truth": "cryptojacking",
+    "swing_ratio": 0.027,
+    "z_score": 0.38,
+    "candidate_reasons": [
+      "high_mean_power",
+      "persistent_high_load"
+    ],
+    "features": {
+      "mean_w": 285.08039,
+      "std_w": 1.36374,
+      "swing_ratio": 0.02675,
+      "cv": 0.00478,
+      "periodicity_strength": 0.73125,
+      "dominant_freq_hz": 5.0,
+      "duty_regularity": 0.0,
+      "n_transitions": 37.0,
+      "ramp_mean_w_per_s": 5.69556,
+      "ramp_max_w_per_s": 17.16331,
+      "high_load_fraction": 1.0,
+      "longest_high_seconds": 20.0,
+      "util_mean": 96.00395,
+      "util_std": 1.23722
+    },
+    "description": "평균 전력이 정상 기준선보다 크게 높게 지속됨. 전력이 비교적 평평함 (swing ratio 0.03, 변동 적음). high/low 전환이 불규칙하고 예측하기 어려움. 지속적이고 뚜렷한 주기성 존재 (강도 0.73). 높은 부하가 시간창 대부분에서 지속됨.",
+    "rag_top": [
+      [
+        "cryptojacking",
+        0.413
+      ],
+      [
+        "ltma",
+        0.227
+      ],
+      [
+        "normal_workloads",
+        0.216
+      ]
+    ],
+    "threat_id": "cryptojacking",
+    "anomaly_score": 1.0,
+    "score_components": {
+      "z_score": 0.07607,
+      "swing": 0.01338,
+      "mean_deviation": 1.0,
+      "persistence": 1.0,
+      "mechanical_periodicity": 0.0
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "의심",
+      "closest_match": "cryptojacking",
+      "reason": "(stub) 검색 최상위 문서 'cryptojacking'(유사도 0.413) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-attack-crypto-202",
+    "attack_id": "cryptojacking-steady-primary",
+    "window_id": "syn-attack-crypto-202:gpu0:rows100-300",
+    "gpu_id": 0,
+    "window_start": 100,
+    "window_end": 300,
+    "ground_truth": "cryptojacking",
+    "swing_ratio": 0.03,
+    "z_score": 1.63,
+    "candidate_reasons": [
+      "high_mean_power",
+      "persistent_high_load"
+    ],
+    "features": {
+      "mean_w": 284.77422,
+      "std_w": 1.77686,
+      "swing_ratio": 0.02962,
+      "cv": 0.00624,
+      "periodicity_strength": 0.82548,
+      "dominant_freq_hz": 5.0,
+      "duty_regularity": 0.0,
+      "n_transitions": 24.0,
+      "ramp_mean_w_per_s": 5.5428,
+      "ramp_max_w_per_s": 21.29775,
+      "high_load_fraction": 1.0,
+      "longest_high_seconds": 20.0,
+      "util_mean": 95.92935,
+      "util_std": 1.16291
+    },
+    "description": "평균 전력이 정상 기준선보다 크게 높게 지속됨. 전력이 비교적 평평함 (swing ratio 0.03, 변동 적음). high/low 전환이 불규칙하고 예측하기 어려움. 지속적이고 뚜렷한 주기성 존재 (강도 0.83). 높은 부하가 시간창 대부분에서 지속됨.",
+    "rag_top": [
+      [
+        "cryptojacking",
+        0.413
+      ],
+      [
+        "ltma",
+        0.227
+      ],
+      [
+        "normal_workloads",
+        0.216
+      ]
+    ],
+    "threat_id": "cryptojacking",
+    "anomaly_score": 1.0,
+    "score_components": {
+      "z_score": 0.32593,
+      "swing": 0.01481,
+      "mean_deviation": 1.0,
+      "persistence": 1.0,
+      "mechanical_periodicity": 0.0
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "의심",
+      "closest_match": "cryptojacking",
+      "reason": "(stub) 검색 최상위 문서 'cryptojacking'(유사도 0.413) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-attack-crypto-202",
+    "attack_id": "cryptojacking-steady-primary",
+    "window_id": "syn-attack-crypto-202:gpu0:rows200-400",
+    "gpu_id": 0,
+    "window_start": 200,
+    "window_end": 400,
+    "ground_truth": "cryptojacking",
+    "swing_ratio": 0.026,
+    "z_score": 0.032,
+    "candidate_reasons": [
+      "high_mean_power",
+      "persistent_high_load"
+    ],
+    "features": {
+      "mean_w": 284.61028,
+      "std_w": 1.84708,
+      "swing_ratio": 0.02595,
+      "cv": 0.00649,
+      "periodicity_strength": 0.83138,
+      "dominant_freq_hz": 5.0,
+      "duty_regularity": 0.12585,
+      "n_transitions": 20.0,
+      "ramp_mean_w_per_s": 5.23492,
+      "ramp_max_w_per_s": 21.29775,
+      "high_load_fraction": 1.0,
+      "longest_high_seconds": 20.0,
+      "util_mean": 95.91402,
+      "util_std": 1.18205
+    },
+    "description": "평균 전력이 정상 기준선보다 크게 높게 지속됨. 전력이 비교적 평평함 (swing ratio 0.03, 변동 적음). high/low 전환이 불규칙하고 예측하기 어려움. 지속적이고 뚜렷한 주기성 존재 (강도 0.83). 높은 부하가 시간창 대부분에서 지속됨.",
+    "rag_top": [
+      [
+        "cryptojacking",
+        0.413
+      ],
+      [
+        "ltma",
+        0.227
+      ],
+      [
+        "normal_workloads",
+        0.216
+      ]
+    ],
+    "threat_id": "cryptojacking",
+    "anomaly_score": 1.0,
+    "score_components": {
+      "z_score": 0.00633,
+      "swing": 0.01298,
+      "mean_deviation": 1.0,
+      "persistence": 1.0,
+      "mechanical_periodicity": 0.10463
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "의심",
+      "closest_match": "cryptojacking",
+      "reason": "(stub) 검색 최상위 문서 'cryptojacking'(유사도 0.413) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-attack-crypto-202",
+    "attack_id": "cryptojacking-steady-primary",
+    "window_id": "syn-attack-crypto-202:gpu0:rows300-500",
+    "gpu_id": 0,
+    "window_start": 300,
+    "window_end": 500,
+    "ground_truth": "cryptojacking",
+    "swing_ratio": 0.025,
+    "z_score": -0.167,
+    "candidate_reasons": [
+      "high_mean_power",
+      "persistent_high_load"
+    ],
+    "features": {
+      "mean_w": 284.50191,
+      "std_w": 1.58465,
+      "swing_ratio": 0.0255,
+      "cv": 0.00557,
+      "periodicity_strength": 0.83485,
+      "dominant_freq_hz": 5.0,
+      "duty_regularity": 0.19902,
+      "n_transitions": 19.0,
+      "ramp_mean_w_per_s": 4.99557,
+      "ramp_max_w_per_s": 18.67474,
+      "high_load_fraction": 1.0,
+      "longest_high_seconds": 20.0,
+      "util_mean": 95.95198,
+      "util_std": 1.16613
+    },
+    "description": "평균 전력이 정상 기준선보다 크게 높게 지속됨. 전력이 비교적 평평함 (swing ratio 0.03, 변동 적음). high/low 전환이 불규칙하고 예측하기 어려움. 지속적이고 뚜렷한 주기성 존재 (강도 0.83). 높은 부하가 시간창 대부분에서 지속됨.",
+    "rag_top": [
+      [
+        "cryptojacking",
+        0.413
+      ],
+      [
+        "ltma",
+        0.227
+      ],
+      [
+        "normal_workloads",
+        0.216
+      ]
+    ],
+    "threat_id": "cryptojacking",
+    "anomaly_score": 1.0,
+    "score_components": {
+      "z_score": 0.03347,
+      "swing": 0.01275,
+      "mean_deviation": 1.0,
+      "persistence": 1.0,
+      "mechanical_periodicity": 0.16615
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "의심",
+      "closest_match": "cryptojacking",
+      "reason": "(stub) 검색 최상위 문서 'cryptojacking'(유사도 0.413) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-attack-crypto-202",
+    "attack_id": "cryptojacking-steady-primary",
+    "window_id": "syn-attack-crypto-202:gpu0:rows400-600",
+    "gpu_id": 0,
+    "window_start": 400,
+    "window_end": 600,
+    "ground_truth": "cryptojacking",
+    "swing_ratio": 0.026,
+    "z_score": -0.15,
+    "candidate_reasons": [
+      "high_mean_power",
+      "persistent_high_load"
+    ],
+    "features": {
+      "mean_w": 284.31624,
+      "std_w": 1.54113,
+      "swing_ratio": 0.02554,
+      "cv": 0.00542,
+      "periodicity_strength": 0.83249,
+      "dominant_freq_hz": 5.0,
+      "duty_regularity": 0.0,
+      "n_transitions": 19.0,
+      "ramp_mean_w_per_s": 4.99313,
+      "ramp_max_w_per_s": 19.6219,
+      "high_load_fraction": 1.0,
+      "longest_high_seconds": 20.0,
+      "util_mean": 96.00302,
+      "util_std": 1.13748
+    },
+    "description": "평균 전력이 정상 기준선보다 크게 높게 지속됨. 전력이 비교적 평평함 (swing ratio 0.03, 변동 적음). high/low 전환이 불규칙하고 예측하기 어려움. 지속적이고 뚜렷한 주기성 존재 (강도 0.83). 높은 부하가 시간창 대부분에서 지속됨.",
+    "rag_top": [
+      [
+        "cryptojacking",
+        0.413
+      ],
+      [
+        "ltma",
+        0.227
+      ],
+      [
+        "normal_workloads",
+        0.216
+      ]
+    ],
+    "threat_id": "cryptojacking",
+    "anomaly_score": 1.0,
+    "score_components": {
+      "z_score": 0.03002,
+      "swing": 0.01277,
+      "mean_deviation": 1.0,
+      "persistence": 1.0,
+      "mechanical_periodicity": 0.0
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "의심",
+      "closest_match": "cryptojacking",
+      "reason": "(stub) 검색 최상위 문서 'cryptojacking'(유사도 0.413) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-attack-crypto-202",
+    "attack_id": "cryptojacking-steady-primary",
+    "window_id": "syn-attack-crypto-202:gpu0:rows500-700",
+    "gpu_id": 0,
+    "window_start": 500,
+    "window_end": 700,
+    "ground_truth": "cryptojacking",
+    "swing_ratio": 0.028,
+    "z_score": 0.907,
+    "candidate_reasons": [
+      "high_mean_power",
+      "persistent_high_load"
+    ],
+    "features": {
+      "mean_w": 284.57593,
+      "std_w": 1.49984,
+      "swing_ratio": 0.02796,
+      "cv": 0.00527,
+      "periodicity_strength": 0.82885,
+      "dominant_freq_hz": 5.0,
+      "duty_regularity": 0.0,
+      "n_transitions": 26.0,
+      "ramp_mean_w_per_s": 5.12288,
+      "ramp_max_w_per_s": 19.6219,
+      "high_load_fraction": 1.0,
+      "longest_high_seconds": 20.0,
+      "util_mean": 96.12416,
+      "util_std": 1.15701
+    },
+    "description": "평균 전력이 정상 기준선보다 크게 높게 지속됨. 전력이 비교적 평평함 (swing ratio 0.03, 변동 적음). high/low 전환이 불규칙하고 예측하기 어려움. 지속적이고 뚜렷한 주기성 존재 (강도 0.83). 높은 부하가 시간창 대부분에서 지속됨.",
+    "rag_top": [
+      [
+        "cryptojacking",
+        0.413
+      ],
+      [
+        "ltma",
+        0.227
+      ],
+      [
+        "normal_workloads",
+        0.216
+      ]
+    ],
+    "threat_id": "cryptojacking",
+    "anomaly_score": 1.0,
+    "score_components": {
+      "z_score": 0.18143,
+      "swing": 0.01398,
+      "mean_deviation": 1.0,
+      "persistence": 1.0,
+      "mechanical_periodicity": 0.0
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "의심",
+      "closest_match": "cryptojacking",
+      "reason": "(stub) 검색 최상위 문서 'cryptojacking'(유사도 0.413) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-attack-crypto-202",
+    "attack_id": "cryptojacking-steady-primary",
+    "window_id": "syn-attack-crypto-202:gpu0:rows600-800",
+    "gpu_id": 0,
+    "window_start": 600,
+    "window_end": 800,
+    "ground_truth": "cryptojacking",
+    "swing_ratio": 0.024,
+    "z_score": -0.961,
+    "candidate_reasons": [
+      "high_mean_power",
+      "persistent_high_load"
+    ],
+    "features": {
+      "mean_w": 284.94406,
+      "std_w": 1.38783,
+      "swing_ratio": 0.02367,
+      "cv": 0.00487,
+      "periodicity_strength": 0.7809,
+      "dominant_freq_hz": 5.0,
+      "duty_regularity": 0.0,
+      "n_transitions": 15.0,
+      "ramp_mean_w_per_s": 5.05038,
+      "ramp_max_w_per_s": 17.40906,
+      "high_load_fraction": 1.0,
+      "longest_high_seconds": 20.0,
+      "util_mean": 96.12853,
+      "util_std": 1.23586
+    },
+    "description": "평균 전력이 정상 기준선보다 크게 높게 지속됨. 전력이 비교적 평평함 (swing ratio 0.02, 변동 적음). high/low 전환이 불규칙하고 예측하기 어려움. 지속적이고 뚜렷한 주기성 존재 (강도 0.78). 높은 부하가 시간창 대부분에서 지속됨.",
+    "rag_top": [
+      [
+        "cryptojacking",
+        0.413
+      ],
+      [
+        "ltma",
+        0.227
+      ],
+      [
+        "normal_workloads",
+        0.216
+      ]
+    ],
+    "threat_id": "cryptojacking",
+    "anomaly_score": 1.0,
+    "score_components": {
+      "z_score": 0.19228,
+      "swing": 0.01184,
+      "mean_deviation": 1.0,
+      "persistence": 1.0,
+      "mechanical_periodicity": 0.0
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "의심",
+      "closest_match": "cryptojacking",
+      "reason": "(stub) 검색 최상위 문서 'cryptojacking'(유사도 0.413) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-attack-crypto-202",
+    "attack_id": "cryptojacking-steady-primary",
+    "window_id": "syn-attack-crypto-202:gpu0:rows700-900",
+    "gpu_id": 0,
+    "window_start": 700,
+    "window_end": 900,
+    "ground_truth": "cryptojacking",
+    "swing_ratio": 0.026,
+    "z_score": -0.161,
+    "candidate_reasons": [
+      "high_mean_power",
+      "persistent_high_load"
+    ],
+    "features": {
+      "mean_w": 285.50094,
+      "std_w": 1.64373,
+      "swing_ratio": 0.02551,
+      "cv": 0.00576,
+      "periodicity_strength": 0.81355,
+      "dominant_freq_hz": 5.0,
+      "duty_regularity": 0.0,
+      "n_transitions": 23.0,
+      "ramp_mean_w_per_s": 5.47188,
+      "ramp_max_w_per_s": 22.63893,
+      "high_load_fraction": 1.0,
+      "longest_high_seconds": 20.0,
+      "util_mean": 95.84789,
+      "util_std": 1.19431
+    },
+    "description": "평균 전력이 정상 기준선보다 크게 높게 지속됨. 전력이 비교적 평평함 (swing ratio 0.03, 변동 적음). high/low 전환이 불규칙하고 예측하기 어려움. 지속적이고 뚜렷한 주기성 존재 (강도 0.81). 높은 부하가 시간창 대부분에서 지속됨.",
+    "rag_top": [
+      [
+        "cryptojacking",
+        0.413
+      ],
+      [
+        "ltma",
+        0.227
+      ],
+      [
+        "normal_workloads",
+        0.216
+      ]
+    ],
+    "threat_id": "cryptojacking",
+    "anomaly_score": 1.0,
+    "score_components": {
+      "z_score": 0.03226,
+      "swing": 0.01275,
+      "mean_deviation": 1.0,
+      "persistence": 1.0,
+      "mechanical_periodicity": 0.0
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "의심",
+      "closest_match": "cryptojacking",
+      "reason": "(stub) 검색 최상위 문서 'cryptojacking'(유사도 0.413) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-attack-crypto-202",
+    "attack_id": "cryptojacking-steady-primary",
+    "window_id": "syn-attack-crypto-202:gpu0:rows800-1000",
+    "gpu_id": 0,
+    "window_start": 800,
+    "window_end": 1000,
+    "ground_truth": "cryptojacking",
+    "swing_ratio": 0.028,
+    "z_score": 0.94,
+    "candidate_reasons": [
+      "high_mean_power",
+      "persistent_high_load"
+    ],
+    "features": {
+      "mean_w": 285.29314,
+      "std_w": 1.60641,
+      "swing_ratio": 0.02804,
+      "cv": 0.00563,
+      "periodicity_strength": 0.80113,
+      "dominant_freq_hz": 5.0,
+      "duty_regularity": 0.0,
+      "n_transitions": 27.0,
+      "ramp_mean_w_per_s": 5.6096,
+      "ramp_max_w_per_s": 22.63893,
+      "high_load_fraction": 1.0,
+      "longest_high_seconds": 20.0,
+      "util_mean": 95.88244,
+      "util_std": 1.12591
+    },
+    "description": "평균 전력이 정상 기준선보다 크게 높게 지속됨. 전력이 비교적 평평함 (swing ratio 0.03, 변동 적음). high/low 전환이 불규칙하고 예측하기 어려움. 지속적이고 뚜렷한 주기성 존재 (강도 0.80). 높은 부하가 시간창 대부분에서 지속됨.",
+    "rag_top": [
+      [
+        "cryptojacking",
+        0.413
+      ],
+      [
+        "ltma",
+        0.227
+      ],
+      [
+        "normal_workloads",
+        0.216
+      ]
+    ],
+    "threat_id": "cryptojacking",
+    "anomaly_score": 1.0,
+    "score_components": {
+      "z_score": 0.18808,
+      "swing": 0.01402,
+      "mean_deviation": 1.0,
+      "persistence": 1.0,
+      "mechanical_periodicity": 0.0
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "의심",
+      "closest_match": "cryptojacking",
+      "reason": "(stub) 검색 최상위 문서 'cryptojacking'(유사도 0.413) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-attack-crypto-202",
+    "attack_id": "cryptojacking-steady-primary",
+    "window_id": "syn-attack-crypto-202:gpu0:rows900-1100",
+    "gpu_id": 0,
+    "window_start": 900,
+    "window_end": 1100,
+    "ground_truth": "cryptojacking",
+    "swing_ratio": 0.021,
+    "z_score": -2.088,
+    "candidate_reasons": [
+      "high_mean_power",
+      "persistent_high_load"
+    ],
+    "features": {
+      "mean_w": 284.83917,
+      "std_w": 1.292,
+      "swing_ratio": 0.02109,
+      "cv": 0.00454,
+      "periodicity_strength": 0.74598,
+      "dominant_freq_hz": 5.0,
+      "duty_regularity": 0.0,
+      "n_transitions": 23.0,
+      "ramp_mean_w_per_s": 5.0178,
+      "ramp_max_w_per_s": 16.79353,
+      "high_load_fraction": 1.0,
+      "longest_high_seconds": 20.0,
+      "util_mean": 96.01453,
+      "util_std": 1.25198
+    },
+    "description": "평균 전력이 정상 기준선보다 크게 높게 지속됨. 전력이 비교적 평평함 (swing ratio 0.02, 변동 적음). high/low 전환이 불규칙하고 예측하기 어려움. 지속적이고 뚜렷한 주기성 존재 (강도 0.75). 높은 부하가 시간창 대부분에서 지속됨.",
+    "rag_top": [
+      [
+        "cryptojacking",
+        0.413
+      ],
+      [
+        "ltma",
+        0.227
+      ],
+      [
+        "normal_workloads",
+        0.216
+      ]
+    ],
+    "threat_id": "cryptojacking",
+    "anomaly_score": 1.0,
+    "score_components": {
+      "z_score": 0.41762,
+      "swing": 0.01054,
+      "mean_deviation": 1.0,
+      "persistence": 1.0,
+      "mechanical_periodicity": 0.0
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "의심",
+      "closest_match": "cryptojacking",
+      "reason": "(stub) 검색 최상위 문서 'cryptojacking'(유사도 0.413) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  },
+  {
+    "session_id": "syn-attack-crypto-202",
+    "attack_id": "cryptojacking-steady-primary",
+    "window_id": "syn-attack-crypto-202:gpu0:rows1000-1200",
+    "gpu_id": 0,
+    "window_start": 1000,
+    "window_end": 1200,
+    "ground_truth": "cryptojacking",
+    "swing_ratio": 0.025,
+    "z_score": -0.361,
+    "candidate_reasons": [
+      "high_mean_power",
+      "persistent_high_load"
+    ],
+    "features": {
+      "mean_w": 284.95524,
+      "std_w": 1.33741,
+      "swing_ratio": 0.02505,
+      "cv": 0.00469,
+      "periodicity_strength": 0.74795,
+      "dominant_freq_hz": 5.0,
+      "duty_regularity": 0.0514,
+      "n_transitions": 28.0,
+      "ramp_mean_w_per_s": 5.29353,
+      "ramp_max_w_per_s": 18.32276,
+      "high_load_fraction": 1.0,
+      "longest_high_seconds": 20.0,
+      "util_mean": 95.97303,
+      "util_std": 1.28952
+    },
+    "description": "평균 전력이 정상 기준선보다 크게 높게 지속됨. 전력이 비교적 평평함 (swing ratio 0.03, 변동 적음). high/low 전환이 불규칙하고 예측하기 어려움. 지속적이고 뚜렷한 주기성 존재 (강도 0.75). 높은 부하가 시간창 대부분에서 지속됨.",
+    "rag_top": [
+      [
+        "cryptojacking",
+        0.413
+      ],
+      [
+        "ltma",
+        0.227
+      ],
+      [
+        "normal_workloads",
+        0.216
+      ]
+    ],
+    "threat_id": "cryptojacking",
+    "anomaly_score": 1.0,
+    "score_components": {
+      "z_score": 0.07219,
+      "swing": 0.01253,
+      "mean_deviation": 1.0,
+      "persistence": 1.0,
+      "mechanical_periodicity": 0.03845
+    },
+    "score_version": "cyber-stage1-or-v1",
+    "verdict": {
+      "risk": "의심",
+      "closest_match": "cryptojacking",
+      "reason": "(stub) 검색 최상위 문서 'cryptojacking'(유사도 0.413) 기준 규칙 판정. 실제 배포 시 LLM으로 교체.",
+      "_backend": "stub"
+    }
+  }
+]

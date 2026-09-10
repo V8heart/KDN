@@ -1,0 +1,20 @@
+{
+  "scope": "comparison of public dynamic test systems; not a real regional grid",
+  "systems": {
+    "Kundur": {
+      "runs": 28,
+      "converged": 26,
+      "peak_hz": 0.1,
+      "peak_osc_std": 0.0044347308114567
+    },
+    "WECC 179": {
+      "runs": 28,
+      "converged": 28,
+      "peak_hz": 1.0500000000000005,
+      "peak_osc_std": 0.0052741944934504
+    }
+  },
+  "wecc_reference_hz": 0.37,
+  "wecc_global_peak_near_reference": false,
+  "interpretation": "bundled WECC GENCLS/PQ experiment did not reproduce a global peak near 0.37 Hz"
+}

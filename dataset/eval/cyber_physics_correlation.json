@@ -1,0 +1,21 @@
+{
+  "scope": "public dynamic test systems only; not a real regional grid",
+  "joined_rows": 7,
+  "usable_rows": 3,
+  "converged_rows": 6,
+  "minimum_rows_for_inference": 8,
+  "inference_status": "descriptive_only",
+  "warning": "Very small samples can produce perfect rank correlations; do not treat rho or p-values as calibrated evidence.",
+  "spearman": {
+    "osc_std": {
+      "n": 3,
+      "rho": 0.5,
+      "pvalue": 0.6666666666666666
+    },
+    "rocof_hz_s": {
+      "n": 3,
+      "rho": -1.0,
+      "pvalue": 0.0
+    }
+  }
+}

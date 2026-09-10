@@ -1,0 +1,56 @@
+{
+  "normal_baseline": {
+    "mean_w": 120.18818,
+    "swing_ratio": 0.11075,
+    "duty_regularity": 0.0,
+    "periodicity_strength": 0.77794
+  },
+  "normal_distributed_training": {
+    "mean_w": 178.14067,
+    "swing_ratio": 0.48566,
+    "duty_regularity": 0.06772,
+    "periodicity_strength": 0.92037
+  },
+  "normal_hpo_search": {
+    "mean_w": 166.92619,
+    "swing_ratio": 1.41775,
+    "duty_regularity": 0.24366,
+    "periodicity_strength": 0.89378
+  },
+  "normal_checkpoint": {
+    "mean_w": 181.19125,
+    "swing_ratio": 0.90255,
+    "duty_regularity": 0.05211,
+    "periodicity_strength": 0.83825
+  },
+  "normal_dataloader_stall": {
+    "mean_w": 135.52928,
+    "swing_ratio": 1.23321,
+    "duty_regularity": 0.0,
+    "periodicity_strength": 0.89805
+  },
+  "normal_eval_train_switch": {
+    "mean_w": 153.40731,
+    "swing_ratio": 0.78025,
+    "duty_regularity": 0.69701,
+    "periodicity_strength": 0.96724
+  },
+  "swma": {
+    "mean_w": 183.87614,
+    "swing_ratio": 1.69539,
+    "duty_regularity": 1.0,
+    "periodicity_strength": 0.98309
+  },
+  "ltma": {
+    "mean_w": 120.10556,
+    "swing_ratio": 1.60752,
+    "duty_regularity": 0.33348,
+    "periodicity_strength": 0.91113
+  },
+  "cryptojacking": {
+    "mean_w": 284.86656,
+    "swing_ratio": 0.03138,
+    "duty_regularity": 0.0,
+    "periodicity_strength": 0.8164
+  }
+}

@@ -24,8 +24,9 @@ def compute_window_features(power: np.ndarray,
         util:  GPU 사용률 시계열 (%) — 있으면 추가 피처 사용
         sample_hz: 이 시계열의 실효 샘플링 레이트 (주기 추정에 사용)
     """
-    power = np.asarray(power, dtype=float)
-    power = power[np.isfinite(power)]
+    raw_power = np.asarray(power, dtype=float)
+    power_mask = np.isfinite(raw_power)
+    power = raw_power[power_mask]
     if len(power) < 8:
         return {}
 
@@ -34,6 +35,9 @@ def compute_window_features(power: np.ndarray,
     pmin, pmax = float(np.min(power)), float(np.max(power))
     swing_ratio = (pmax - pmin) / mean if mean > 1e-6 else 0.0
     cv = std / mean if mean > 1e-6 else 0.0  # 변동계수
+    ramp = np.abs(np.diff(power)) * sample_hz
+    ramp_mean_w_per_s = float(np.mean(ramp)) if len(ramp) else 0.0
+    ramp_max_w_per_s = float(np.max(ramp)) if len(ramp) else 0.0
 
     # --- 주기성 / 규칙성 (자기상관 기반) ---
     x = power - mean
@@ -60,6 +64,15 @@ def compute_window_features(power: np.ndarray,
     else:
         duty_regularity = 0.0  # 전환이 거의 없음 = 평평함
 
+    # --- 지속성: 높은 부하가 얼마나 오래 연속되는지 ---
+    high_load = power > max(200.0, mean * 0.9)
+    high_load_fraction = float(np.mean(high_load))
+    longest = current = 0
+    for value in high_load:
+        current = current + 1 if value else 0
+        longest = max(longest, current)
+    longest_high_seconds = float(longest / sample_hz) if sample_hz > 0 else 0.0
+
     feats = {
         "mean_w": mean,
         "std_w": std,
@@ -69,14 +82,20 @@ def compute_window_features(power: np.ndarray,
         "dominant_freq_hz": dominant_freq_hz,
         "duty_regularity": duty_regularity,
         "n_transitions": int(len(transitions)),
+        "ramp_mean_w_per_s": ramp_mean_w_per_s,
+        "ramp_max_w_per_s": ramp_max_w_per_s,
+        "high_load_fraction": high_load_fraction,
+        "longest_high_seconds": longest_high_seconds,
     }
 
     if util is not None:
-        util = np.asarray(util, dtype=float)
-        util = util[np.isfinite(util)]
-        if len(util):
-            feats["util_mean"] = float(np.mean(util))
-            feats["util_std"] = float(np.std(util))
+        raw_util = np.asarray(util, dtype=float)
+        if len(raw_util) == len(raw_power):
+            aligned = raw_util[power_mask]
+            aligned = aligned[np.isfinite(aligned)]
+            if len(aligned):
+                feats["util_mean"] = float(np.mean(aligned))
+                feats["util_std"] = float(np.std(aligned))
     return feats
 
 
@@ -129,6 +148,11 @@ def features_to_description(feats: dict, baseline_mean_w: float | None = None) -
         parts.append(f"약한 주기성 존재 (강도 {ps:.2f})")
     else:
         parts.append("뚜렷한 주기성 없음")
+
+    if feats.get("high_load_fraction", 0.0) > 0.8:
+        parts.append("높은 부하가 시간창 대부분에서 지속됨")
+    if feats.get("ramp_max_w_per_s", 0.0) > 500:
+        parts.append("순간 전력 상승·하강 기울기가 큼")
 
     return ". ".join(parts) + "."
 

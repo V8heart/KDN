@@ -34,23 +34,145 @@ WINDOW = 200
 STRIDE = 100
 
 
-def stage1_screen(df: pd.DataFrame, z_threshold: float = 2.5):
-    """1단계: 윈도우별 변동폭 계산, 전체 대비 z-score가 높은 윈도우만 후보로."""
+def context_to_query(context: dict[str, str]) -> str:
+    """스케줄러/실험 하네스 맥락을 RAG 검색 가능한 설명으로 바꾼다."""
+    job_type = context.get("job_type", "").lower()
+    if job_type.startswith("normal_"):
+        return (
+            "정상 워크로드 프로파일이며 오탐 방지용 기준에 해당함. "
+            "변동 원인이 예정된 작업 종류와 사용자 맥락으로 설명되고 과거 패턴과 일치함."
+        )
+    if "hash" in job_type:
+        return (
+            "등록되지 않은 GPU 크립토재킹 의심 해시 연산. "
+            "지속적으로 높은 GPU 사용률과 평평한 장시간 부하."
+        )
+    if "llm" in job_type and "train" in job_type:
+        return (
+            "LLM Training Modulation Attack LTMA 대조 대상. 실제 LLM 학습 파이프라인 "
+            "내부에서 평균을 유지하며 불규칙하게 변조된 부하."
+        )
+    if "unknown" in job_type:
+        return (
+            "Synthetic Workload Modulation Attack SWMA 대조 대상. "
+            "사용자 작업 맥락으로 설명되지 않는 별도 CUDA 커널의 규칙적 on/off."
+        )
+    return ""
+
+
+def infer_sample_hz(df: pd.DataFrame, fallback: float = 1.0) -> float:
+    """명시값 또는 timestamp 간격에서 세션의 샘플링률을 추정한다."""
+    if "sample_hz" in df.columns:
+        values = pd.to_numeric(df["sample_hz"], errors="coerce").dropna()
+        if len(values) and values.iloc[0] > 0:
+            return float(values.iloc[0])
+    if "timestamp" in df.columns:
+        ts = pd.to_numeric(df["timestamp"], errors="coerce").dropna().to_numpy()
+        deltas = np.diff(ts)
+        deltas = deltas[deltas > 0]
+        if len(deltas):
+            return float(1.0 / np.median(deltas))
+    return fallback
+
+
+def anomaly_score_components(
+    features: dict,
+    *,
+    z_score: float,
+    baseline_mean_w: float | None,
+) -> dict[str, float]:
+    """Transparent 0-1 Cyber Stage-1 score components (heuristic v1)."""
+    mean_w = float(features.get("mean_w", 0.0))
+    mean_deviation = 0.0
+    if baseline_mean_w and baseline_mean_w > 0:
+        mean_deviation = min(1.0, abs(mean_w / baseline_mean_w - 1.0))
+    return {
+        "z_score": min(1.0, abs(float(z_score)) / 5.0),
+        "swing": min(1.0, max(0.0, float(features.get("swing_ratio", 0.0))) / 2.0),
+        "mean_deviation": mean_deviation,
+        "persistence": min(1.0, max(0.0, float(features.get("high_load_fraction", 0.0)))),
+        "mechanical_periodicity": min(
+            1.0,
+            max(0.0, float(features.get("periodicity_strength", 0.0)))
+            * max(0.0, float(features.get("duty_regularity", 0.0))),
+        ),
+    }
+
+
+def anomaly_score(components: dict[str, float]) -> float:
+    """OR-consistent score: strongest Stage-1 signal, not a calibrated risk."""
+    return float(max(components.values(), default=0.0))
+
+
+def stage1_screen(
+    df: pd.DataFrame,
+    z_threshold: float = 2.5,
+    *,
+    baseline_mean_w: float | None = None,
+    sample_hz: float = 1.0,
+    window: int = WINDOW,
+    stride: int = STRIDE,
+):
+    """범용 필터들로 한 세션의 의심 윈도우를 선별한다."""
     windows = []
-    for start in range(0, len(df) - WINDOW, STRIDE):
-        w = df.iloc[start:start + WINDOW]
+    for start in range(0, len(df) - window + 1, stride):
+        w = df.iloc[start:start + window]
         power = w["power_w"].values
-        mean = np.mean(power)
-        swing = (np.max(power) - np.min(power)) / mean if mean > 1e-6 else 0.0
-        windows.append({"start": start, "swing_ratio": swing})
+        util = w["util_gpu_pct"].values if "util_gpu_pct" in w else None
+        feats = compute_window_features(power, util, sample_hz=sample_hz)
+        if not feats:
+            continue
+        label = str(w["label"].mode().iloc[0]) if "label" in w and not w["label"].mode().empty else None
+        windows.append(
+            {
+                "start": start,
+                "end": start + window,
+                "label": label,
+                **feats,
+            }
+        )
 
     wdf = pd.DataFrame(windows)
-    if len(wdf) < 3:
-        return wdf.assign(is_candidate=False)
+    if wdf.empty:
+        return wdf.assign(z_score=pd.Series(dtype=float), candidate_reasons="", is_candidate=False)
 
     mu, sigma = wdf["swing_ratio"].mean(), wdf["swing_ratio"].std()
-    wdf["z_score"] = (wdf["swing_ratio"] - mu) / (sigma + 1e-9)
-    wdf["is_candidate"] = wdf["z_score"].abs() > z_threshold
+    if len(wdf) < 3 or not np.isfinite(sigma) or sigma < 1e-9:
+        wdf["z_score"] = 0.0
+    else:
+        wdf["z_score"] = (wdf["swing_ratio"] - mu) / sigma
+
+    def reasons(row) -> str:
+        found: list[str] = []
+        baseline = baseline_mean_w
+        if abs(float(row["z_score"])) > z_threshold:
+            found.append("swing_zscore")
+        if float(row["swing_ratio"]) > 1.1:
+            found.append("large_swing")
+        if baseline and baseline > 0:
+            ratio = float(row["mean_w"]) / baseline
+            if ratio > 1.8:
+                found.append("high_mean_power")
+            elif ratio < 0.5:
+                found.append("low_mean_power")
+        persistent = (
+            float(row.get("high_load_fraction", 0)) > 0.8
+            and float(row.get("cv", 1)) < 0.15
+        )
+        if persistent:
+            found.append("persistent_high_load")
+        mechanical = (
+            int(row.get("n_transitions", 0)) >= 3
+            and float(row.get("swing_ratio", 0)) > 1.1
+            and float(row.get("duty_regularity", 0)) > 0.75
+            and float(row.get("periodicity_strength", 0)) > 0.45
+        )
+        if mechanical:
+            found.append("mechanical_periodicity")
+        return ",".join(found)
+
+    wdf["candidate_reasons"] = wdf.apply(reasons, axis=1)
+    wdf["is_candidate"] = wdf["candidate_reasons"].str.len() > 0
     return wdf
 
 
@@ -58,61 +180,129 @@ def run(args):
     df = pd.read_csv(args.telemetry)
     print(f"[입력] {args.telemetry}: {len(df)}행")
 
-    # 1단계
-    wdf = stage1_screen(df, z_threshold=args.z_threshold)
-    candidates = wdf[wdf["is_candidate"]]
+    if "power_w" not in df:
+        raise ValueError("입력 CSV에 필수 컬럼 power_w가 없습니다.")
+    if "session_id" not in df:
+        df["session_id"] = "legacy-session"
+    if "gpu_id" not in df:
+        df["gpu_id"] = 0
+
+    baseline = args.baseline_mean
+    if baseline is None and "label" in df:
+        normal = df[df["label"].astype(str).str.startswith("normal")]
+        if len(normal):
+            baseline = float(pd.to_numeric(normal["power_w"], errors="coerce").median())
+            print(f"[기준선] normal 라벨 중앙값으로 자동 추정: {baseline:.2f}W")
+
+    screened: list[pd.DataFrame] = []
+    grouped_frames: dict[tuple[str, object], pd.DataFrame] = {}
+    for (session_id, gpu_id), group in df.groupby(["session_id", "gpu_id"], sort=False):
+        group = group.sort_values("timestamp") if "timestamp" in group else group
+        group = group.reset_index(drop=True)
+        hz = args.sample_hz or infer_sample_hz(group)
+        current = stage1_screen(
+            group,
+            z_threshold=args.z_threshold,
+            baseline_mean_w=baseline,
+            sample_hz=hz,
+            window=args.window,
+            stride=args.stride,
+        )
+        if current.empty:
+            continue
+        current["session_id"] = str(session_id)
+        current["gpu_id"] = gpu_id
+        current["sample_hz"] = hz
+        screened.append(current)
+        grouped_frames[(str(session_id), gpu_id)] = group
+
+    wdf = pd.concat(screened, ignore_index=True) if screened else pd.DataFrame()
+    candidates = wdf[wdf["is_candidate"]] if not wdf.empty else wdf
     print(f"[1단계] 전체 {len(wdf)}개 윈도우 → 후보 {len(candidates)}개 "
-          f"(z>{args.z_threshold})")
+          f"(다중 필터, z>{args.z_threshold})")
 
     if len(candidates) == 0:
         print("의심 후보 없음. 정상으로 판단.")
-        return
+        return []
 
     # RAG 검색기 준비 (1회)
     retriever = SignatureRetriever(backend=args.rag_backend)
 
     results = []
-    util_col = "util_gpu_pct" if "util_gpu_pct" in df.columns else None
 
     for _, cand in candidates.iterrows():
+        key = (str(cand["session_id"]), cand["gpu_id"])
+        group = grouped_frames[key]
         start = int(cand["start"])
-        w = df.iloc[start:start + WINDOW]
+        end = int(cand["end"])
+        w = group.iloc[start:end]
         power = w["power_w"].values
-        util = w[util_col].values if util_col else None
+        util = w["util_gpu_pct"].values if "util_gpu_pct" in w else None
 
         # 2단계: 특성 분석
-        feats = compute_window_features(power, util, sample_hz=args.sample_hz)
-        desc = features_to_description(feats, baseline_mean_w=args.baseline_mean)
+        feats = compute_window_features(power, util, sample_hz=float(cand["sample_hz"]))
+        desc = features_to_description(feats, baseline_mean_w=baseline)
 
-        # 3단계: RAG + LLM
-        retrieved = retriever.search(desc, top_k=3)
         context = {}
-        for c in ("id_user", "job_type", "gres_req"):
+        for c in ("id_user", "job_type", "gres_req", "pid", "process_name"):
             if c in w.columns:
                 context[c] = str(w[c].iloc[0])
+        # 3단계: RAG + LLM
+        context_query = context_to_query(context)
+        query = f"{desc} {context_query}".strip()
+        retrieved = retriever.search(query, top_k=3)
         verdict = analyze_with_llm(desc, retrieved, context=context,
                                     backend=args.llm_backend, model=args.llm_model)
+        raw_attack_id = w["attack_id"].iloc[0] if "attack_id" in w.columns else None
+        attack_id = (
+            str(raw_attack_id)
+            if raw_attack_id is not None and not pd.isna(raw_attack_id) and str(raw_attack_id)
+            else str(cand["session_id"])
+        )
+        components = anomaly_score_components(
+            feats,
+            z_score=float(cand["z_score"]),
+            baseline_mean_w=baseline,
+        )
 
         results.append({
+            "session_id": str(cand["session_id"]),
+            "attack_id": attack_id,
+            "window_id": (
+                f"{cand['session_id']}:gpu{int(cand['gpu_id'])}:rows{start}-{end}"
+            ),
+            "gpu_id": int(cand["gpu_id"]),
             "window_start": start,
+            "window_end": end,
+            "ground_truth": cand.get("label"),
             "swing_ratio": round(float(cand["swing_ratio"]), 3),
             "z_score": round(float(cand["z_score"]), 3),
+            "candidate_reasons": str(cand["candidate_reasons"]).split(","),
+            "features": {k: round(float(v), 5) for k, v in feats.items()},
             "description": desc,
             "rag_top": [(n, round(s, 3)) for n, s, _ in retrieved],
+            "threat_id": verdict.get("closest_match"),
+            "anomaly_score": round(anomaly_score(components), 5),
+            "score_components": {key: round(value, 5) for key, value in components.items()},
+            "score_version": "cyber-stage1-or-v1",
             "verdict": verdict,
         })
 
     print(f"\n[결과] 의심 후보 {len(results)}개 분석 완료:\n")
     for r in results:
         v = r["verdict"]
-        print(f"  윈도우@{r['window_start']} (swing {r['swing_ratio']}, z {r['z_score']})")
+        print(f"  {r['session_id']}/GPU{r['gpu_id']} 윈도우@{r['window_start']} "
+              f"(필터 {r['candidate_reasons']})")
         print(f"    → 위험도: {v.get('risk')} / 최근접: {v.get('closest_match')}")
         print(f"    → 근거: {v.get('reason')}")
         print(f"    → RAG: {r['rag_top']}\n")
 
     if args.out:
-        Path(args.out).write_text(json.dumps(results, ensure_ascii=False, indent=2))
+        target = Path(args.out)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(json.dumps(results, ensure_ascii=False, indent=2))
         print(f"저장: {args.out}")
+    return results
 
 
 def main():
@@ -120,12 +310,15 @@ def main():
     ap.add_argument("--telemetry", required=True, help="DCGM/NVML 수집 CSV")
     ap.add_argument("--baseline-mean", type=float, default=None,
                      help="정상 평균 전력(W). 정상 베이스라인 수집에서 산출")
-    ap.add_argument("--sample-hz", type=float, default=1000.0,
-                     help="텔레메트리 실효 샘플링레이트")
+    ap.add_argument("--sample-hz", type=float, default=None,
+                     help="텔레메트리 실효 샘플링레이트(미지정 시 CSV/timestamp에서 추정)")
+    ap.add_argument("--window", type=int, default=WINDOW, help="윈도우 크기(행)")
+    ap.add_argument("--stride", type=int, default=STRIDE, help="윈도우 이동 간격(행)")
     ap.add_argument("--z-threshold", type=float, default=2.5)
     ap.add_argument("--rag-backend", choices=["sbert", "tfidf"], default="sbert")
     ap.add_argument("--llm-backend", choices=["ollama", "stub"], default="stub")
-    ap.add_argument("--llm-model", default="qwen2.5:7b")
+    ap.add_argument("--llm-model", default="gemma3:12b",
+                     help="Ollama 모델명 (이 서버 검증: gemma3:12b)")
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
     run(args)
