@@ -24,7 +24,15 @@ class AttackProfile:
     cyber_amplitude_frac: float | None = None
 
     def __post_init__(self) -> None:
-        if self.kind not in {"normal", "square", "burst", "ramp", "irregular", "steady"}:
+        if self.kind not in {
+            "normal",
+            "square",
+            "sine",
+            "burst",
+            "ramp",
+            "irregular",
+            "steady",
+        }:
             raise ValueError(f"unsupported waveform kind: {self.kind}")
         if self.frequency_hz is not None and self.frequency_hz <= 0:
             raise ValueError("frequency_hz must be positive")
@@ -86,12 +94,15 @@ def sweep_profile(
     *,
     amplitude_frac: float = 0.10,
     duration_s: float = 14.0,
+    kind: str = "sine",
 ) -> AttackProfile:
     """Return a deterministic periodic profile for a frequency sweep."""
     return AttackProfile(
-        attack_id=f"swma-sweep-f{frequency_hz:.2f}-a{amplitude_frac:.2f}",
+        attack_id=(
+            f"swma-sweep-{kind}-f{frequency_hz:.2f}-a{amplitude_frac:.3f}"
+        ),
         label="swma",
-        kind="square",
+        kind=kind,
         frequency_hz=float(frequency_hz),
         amplitude_frac=float(amplitude_frac),
         duration_s=float(duration_s),

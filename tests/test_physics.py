@@ -40,11 +40,22 @@ class FakeSystem:
 
 
 def test_waveform_schedule_is_bounded_and_resets():
-    profile = sweep_profile(1.45)
+    profile = sweep_profile(1.45, kind="square")
     events = build_event_schedule(profile)
     assert events[-1].relative_delta == 0.0
     assert events[-1].time_s == profile.t_end_s
     assert min(np.diff([event.time_s for event in events])) >= 0.1 - 1e-9
+
+
+def test_sine_sweep_uses_twenty_steps_per_cycle_and_resets():
+    profile = sweep_profile(1.0, amplitude_frac=0.012)
+    events = build_event_schedule(profile)
+    first_cycle = [event for event in events if event.time_s < profile.t_start_s + 1.0]
+    assert profile.kind == "sine"
+    assert len(first_cycle) == 20
+    assert max(abs(event.relative_delta) for event in events) <= 0.012 + 1e-12
+    assert events[-1].time_s == profile.t_end_s
+    assert events[-1].relative_delta == 0.0
 
 
 def test_sampled_profiles_are_deterministic():

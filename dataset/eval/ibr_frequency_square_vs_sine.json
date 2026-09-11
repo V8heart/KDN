@@ -1,0 +1,54 @@
+{
+  "scope": "public dynamic test system; not a real regional grid",
+  "square_csv": "dataset/eval/ibr_frequency_2d_sweep.csv",
+  "sine_csv": "dataset/eval/ibr_frequency_2d_sweep_sine.csv",
+  "by_waveform": {
+    "square": {
+      "0.00": {
+        "runs": 15,
+        "converged": 15,
+        "osc_std_min": 0.0001002277304243,
+        "osc_std_max": 0.0006019761791304,
+        "peak_frequency_hz": 1.1
+      },
+      "0.30": {
+        "runs": 15,
+        "converged": 15,
+        "osc_std_min": 0.0003903626148347,
+        "osc_std_max": 0.000619036433792,
+        "peak_frequency_hz": 1.2000000000000002
+      },
+      "0.50": {
+        "runs": 15,
+        "converged": 15,
+        "osc_std_min": 0.001340614084307,
+        "osc_std_max": 0.001377323918231,
+        "peak_frequency_hz": 0.6
+      }
+    },
+    "sine": {
+      "0.00": {
+        "runs": 15,
+        "converged": 6,
+        "osc_std_min": 8.260466093455413e-05,
+        "osc_std_max": 0.0001915502781908,
+        "peak_frequency_hz": 0.8
+      },
+      "0.30": {
+        "runs": 15,
+        "converged": 2,
+        "osc_std_min": 0.000517572707737,
+        "osc_std_max": 0.0005785904006613,
+        "peak_frequency_hz": 0.1
+      },
+      "0.50": {
+        "runs": 15,
+        "converged": 0,
+        "osc_std_min": null,
+        "osc_std_max": null,
+        "peak_frequency_hz": null
+      }
+    }
+  },
+  "fifty_percent_conclusion": "The 50% stepped-sine sweep produced no converged runs, so frequency separation or resonance cannot be assessed."
+}

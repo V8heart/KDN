@@ -41,6 +41,19 @@ def build_event_schedule(profile: AttackProfile, *, min_interval_s: float = 0.1)
             events.append(InjectionEvent(t, sign * amp))
             sign *= -1.0
             t += half_period
+    elif profile.kind == "sine":
+        if profile.frequency_hz is None:
+            raise ValueError("sine profiles require frequency_hz")
+        # Replay one sinusoidal period as 20 zero-order-hold steps. At the
+        # 1.5 Hz sweep ceiling this is 0.033 s, matching the 30 Hz TDS step.
+        # Convergence failures from frequent changes are retained as results.
+        steps_per_cycle = 20
+        step_s = 1.0 / (profile.frequency_hz * steps_per_cycle)
+        t = start
+        while t < end - 1e-9:
+            phase = 2.0 * np.pi * profile.frequency_hz * (t - start)
+            events.append(InjectionEvent(float(t), float(amp * np.sin(phase))))
+            t += step_s
     elif profile.kind == "ramp":
         ramp_interval_s = max(0.5, min_interval_s)
         count = max(2, int(np.floor(profile.duration_s / ramp_interval_s)) + 1)

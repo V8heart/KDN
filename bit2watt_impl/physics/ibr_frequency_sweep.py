@@ -25,12 +25,23 @@ from bit2watt_impl.physics.simulation import (
     ensure_parent,
     simulate_profile,
 )
+from bit2watt_impl.physics.waveforms import build_event_schedule
 from dataset.attack_profiles import sweep_profile
 
 
-def _builder(penetration: float) -> Callable[[], Any]:
+def _builder(penetration: float, profile=None) -> Callable[[], Any]:
     def _build():
-        return build_wecc_system_at_penetration(penetration, require_pflow=True)
+        ppf_events = None
+        if profile is not None and profile.kind == "sine":
+            ppf_events = [
+                (event.time_s, event.relative_delta)
+                for event in build_event_schedule(profile)
+            ]
+        return build_wecc_system_at_penetration(
+            penetration,
+            require_pflow=True,
+            ppf_events=ppf_events,
+        )
 
     return _build
 
@@ -82,6 +93,7 @@ def run_2d_sweep(
     max_chunk_s: float = 0.5,
     criteria: int = 0,
     excluded_penetrations: list[dict[str, Any]] | None = None,
+    waveform_kind: str = "sine",
 ) -> pd.DataFrame:
     rows: list[dict] = []
     # Fresh runs only — schema/metrics changed (rocof_rms etc.).
@@ -100,15 +112,17 @@ def run_2d_sweep(
                 float(frequency),
                 amplitude_frac=amplitude_frac,
                 duration_s=duration_s,
+                kind=waveform_kind,
             )
             result = simulate_profile(
-                _builder(pen),
+                _builder(pen, profile),
                 profile,
                 test_system="wecc_179_gencls_ibr",
                 model_name="GENCLS",
                 max_chunk_s=max_chunk_s,
                 pq_selection="largest_p0",
                 criteria=criteria,
+                max_rebuilds=0 if waveform_kind == "sine" else 2,
             )
             row = dict(result.row)
             row["target_penetration"] = float(pen)
@@ -138,6 +152,7 @@ def run_2d_sweep(
         amplitude_frac=amplitude_frac,
         criteria=criteria,
         excluded_penetrations=excluded_penetrations or [],
+        waveform_kind=waveform_kind,
     )
     ensure_parent(summary)
     summary.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -213,6 +228,84 @@ def _write_plots(frame: pd.DataFrame, *, heatmap: Path, overlay: Path) -> None:
     plt.close(fig)
 
 
+def write_waveform_comparison(
+    square_csv: Path,
+    sine_csv: Path,
+    *,
+    plot: Path,
+    report_path: Path,
+) -> dict[str, Any]:
+    """Place square and sine osc_std curves side by side and summarize 50%."""
+    square = pd.read_csv(square_csv)
+    sine = pd.read_csv(sine_csv)
+    fig, axes = plt.subplots(1, 2, figsize=(13, 4.8), sharey=True)
+    report: dict[str, Any] = {
+        "scope": "public dynamic test system; not a real regional grid",
+        "square_csv": str(square_csv),
+        "sine_csv": str(sine_csv),
+        "by_waveform": {},
+    }
+    for ax, (kind, frame) in zip(axes, (("square", square), ("sine", sine))):
+        frame = frame.copy()
+        frame["converged"] = frame["converged"].fillna(False).astype(bool)
+        stats: dict[str, Any] = {}
+        for pen, group in frame.groupby("target_penetration"):
+            ok = group[group["converged"]].sort_values("frequency_hz")
+            stats[f"{float(pen):.2f}"] = {
+                "runs": int(len(group)),
+                "converged": int(len(ok)),
+                "osc_std_min": float(ok["osc_std"].min()) if len(ok) else None,
+                "osc_std_max": float(ok["osc_std"].max()) if len(ok) else None,
+                "peak_frequency_hz": (
+                    float(ok.loc[ok["osc_std"].idxmax(), "frequency_hz"])
+                    if len(ok)
+                    else None
+                ),
+            }
+            if len(ok):
+                ax.plot(
+                    ok["frequency_hz"],
+                    ok["osc_std"],
+                    marker="o",
+                    ms=3,
+                    label=f"{float(pen):.0%} IBR",
+                )
+        report["by_waveform"][kind] = stats
+        ax.set_title(f"{kind}: converged osc_std")
+        ax.set_xlabel("Attack frequency (Hz)")
+        ax.grid(alpha=0.25)
+        ax.legend(fontsize=8)
+    axes[0].set_ylabel("Max remaining-GENCLS omega std (p.u.)")
+    fig.suptitle("Public WECC 179: square vs stepped-sine frequency response")
+    fig.tight_layout()
+    ensure_parent(plot)
+    fig.savefig(plot, dpi=160)
+    plt.close(fig)
+
+    sine_50 = report["by_waveform"]["sine"].get("0.50", {})
+    if sine_50.get("converged", 0) == 0:
+        conclusion = (
+            "The 50% stepped-sine sweep produced no converged runs, so "
+            "frequency separation or resonance cannot be assessed."
+        )
+    else:
+        lo = sine_50["osc_std_min"]
+        hi = sine_50["osc_std_max"]
+        ratio = (hi / lo) if lo and lo > 0 else None
+        conclusion = (
+            "The 50% stepped-sine response is frequency-dependent."
+            if ratio is not None and ratio >= 1.2
+            else "The 50% stepped-sine response remains comparatively flat."
+        )
+    report["fifty_percent_conclusion"] = conclusion
+    ensure_parent(report_path)
+    report_path.write_text(
+        json.dumps(report, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+    return report
+
+
 def _summary_report(
     frame: pd.DataFrame,
     *,
@@ -220,18 +313,23 @@ def _summary_report(
     amplitude_frac: float,
     criteria: int,
     excluded_penetrations: list[dict[str, Any]],
+    waveform_kind: str,
 ) -> dict[str, Any]:
     report: dict[str, Any] = {
         "test_system": "wecc_179_gencls",
         "scope": "public dynamic test system; not a real regional grid",
-        "method": "capacity-ranked GENCLS→REGCA1+REECA1 replacement; PQ.Ppf square-wave injection",
+        "method": (
+            "capacity-ranked GENCLS→REGCA1+REECA1 replacement; "
+            f"PQ.Ppf {waveform_kind} injection"
+        ),
+        "waveform_kind": waveform_kind,
         "amplitude_frac": float(amplitude_frac),
         "tds_criteria": int(criteria),
         "amplitude_frac_note": (
             "Identical amplitude_frac is used across penetrations so relative "
             "comparisons remain valid even when absolute responses shrink. "
             "Primary RoCoF evidence uses rocof_rms_hz_s (transition-masked); "
-            "rocof_max_hz_s / legacy rocof_hz_s is diagnostic only for square-wave edges."
+            "rocof_max_hz_s / legacy rocof_hz_s is diagnostic only for waveform edges."
         ),
         "penetrations_requested": penetrations,
         "excluded_penetrations": excluded_penetrations,
@@ -437,6 +535,12 @@ def main() -> None:
     )
     parser.add_argument("--duration-s", type=float, default=14.0)
     parser.add_argument(
+        "--waveform-kind",
+        choices=["sine", "square"],
+        default="sine",
+        help="Sweep waveform; use square to reproduce the previous experiment",
+    )
+    parser.add_argument(
         "--penetrations",
         type=float,
         nargs="*",
@@ -464,6 +568,7 @@ def main() -> None:
         duration_s=args.duration_s,
         criteria=args.criteria,
         excluded_penetrations=excluded,
+        waveform_kind=args.waveform_kind,
     )
 
 

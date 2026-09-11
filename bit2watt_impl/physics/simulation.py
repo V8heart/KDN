@@ -76,6 +76,7 @@ def build_wecc_system_at_penetration(
     penetration: float,
     *,
     require_pflow: bool = True,
+    ppf_events: list[tuple[float, float]] | None = None,
 ) -> Any:
     """Load public WECC 179 GENCLS and optionally replace SGs with REGCA1.
 
@@ -92,7 +93,59 @@ def build_wecc_system_at_penetration(
     dyr = andes.get_case("wecc/wecc_gencls.dyr")
     ss = andes.load(raw, addfile=dyr, setup=False, no_output=True)
     meta = replace_sg_with_ibr(ss, float(penetration))
+    timeseries_path: str | None = None
+    if ppf_events:
+        # ANDES TimeSeries must be added before setup. This avoids repeatedly
+        # stopping/restarting TDS for the ~20-step/cycle sine approximation,
+        # which destabilizes high-IBR cases even at tiny amplitudes.
+        import csv
+        import os
+        import tempfile
+
+        powers = np.asarray(ss.PQ.p0.v, dtype=float)
+        status = np.asarray(ss.PQ.u.v, dtype=float)
+        eligible = np.where(
+            (status > 0) & np.isfinite(powers) & (powers > 0),
+            powers,
+            np.nan,
+        )
+        pq_pos = int(np.nanargmax(eligible))
+        pq_idx = ss.PQ.idx.v[pq_pos]
+        p0 = float(powers[pq_pos])
+        handle = tempfile.NamedTemporaryFile(
+            mode="w",
+            suffix=".csv",
+            prefix="gridpulse_ppf_",
+            delete=False,
+            newline="",
+        )
+        timeseries_path = handle.name
+        with handle:
+            writer = csv.DictWriter(handle, fieldnames=["t", "Ppf"])
+            writer.writeheader()
+            for time_s, relative_delta in ppf_events:
+                writer.writerow(
+                    {
+                        "t": float(time_s),
+                        "Ppf": p0 * (1.0 + float(relative_delta)),
+                    }
+                )
+        ss.add(
+            "TimeSeries",
+            mode=1,
+            path=timeseries_path,
+            sheet="unused",
+            fields="Ppf",
+            tkey="t",
+            model="PQ",
+            dev=pq_idx,
+            dests="Ppf",
+        )
+        ss._gridpulse_timeseries_injection = True
+        ss._gridpulse_timeseries_pq_idx = pq_idx
     ss.setup()
+    if timeseries_path:
+        os.unlink(timeseries_path)
     meta = finalize_inertia_meta(ss, meta)
     ss._gridpulse_ibr_meta = meta
     _configure_constant_power(ss)
@@ -336,35 +389,40 @@ def _run_once(
     schedule = build_event_schedule(profile)
     toggle_times = [float(event.time_s) for event in schedule]
 
-    for segment_index, event in enumerate(schedule):
-        ok, records, reason = run_to(ss, event.time_s, max_chunk_s=max_chunk_s)
-        for record in records:
-            item = asdict(record)
-            item.update({"segment_index": segment_index, "attack_id": profile.attack_id})
-            all_records.append(item)
-        if not ok:
-            return SimulationResult(
-                row={
-                    **profile.to_dict(),
-                    "test_system": test_system,
-                    "case_version": "ANDES-2.0.0",
-                    "pq_idx": str(selected_pq),
-                    "pq_bus": pq_bus,
-                    "pq_base_pu": p0,
-                    "pq_selection": pq_selection,
-                    "criteria": criteria,
-                    "tstep_s": tstep_s,
-                    "disabled_builtin_events": ",".join(
-                        getattr(ss, "_gridpulse_disabled_events", [])
-                    ),
-                    "converged": False,
-                    "failure_reason": reason,
-                    "t_reached_s": current_time(ss),
-                },
-                convergence=all_records,
+    if not getattr(ss, "_gridpulse_timeseries_injection", False):
+        for segment_index, event in enumerate(schedule):
+            ok, records, reason = run_to(ss, event.time_s, max_chunk_s=max_chunk_s)
+            for record in records:
+                item = asdict(record)
+                item.update({"segment_index": segment_index, "attack_id": profile.attack_id})
+                all_records.append(item)
+            if not ok:
+                return SimulationResult(
+                    row={
+                        **profile.to_dict(),
+                        "test_system": test_system,
+                        "case_version": "ANDES-2.0.0",
+                        "pq_idx": str(selected_pq),
+                        "pq_bus": pq_bus,
+                        "pq_base_pu": p0,
+                        "pq_selection": pq_selection,
+                        "criteria": criteria,
+                        "tstep_s": tstep_s,
+                        "disabled_builtin_events": ",".join(
+                            getattr(ss, "_gridpulse_disabled_events", [])
+                        ),
+                        "converged": False,
+                        "failure_reason": reason,
+                        "t_reached_s": current_time(ss),
+                    },
+                    convergence=all_records,
+                )
+            # p0(attr='v') and Ppf are both system-base values.
+            ss.PQ.set(
+                src="Ppf",
+                idx=selected_pq,
+                value=p0 * (1.0 + event.relative_delta),
             )
-        # p0(attr='v') and Ppf are both system-base values.
-        ss.PQ.set(src="Ppf", idx=selected_pq, value=p0 * (1.0 + event.relative_delta))
 
     final_target = profile.t_end_s + 2.0
     ok, records, reason = run_to(ss, final_target, max_chunk_s=max_chunk_s)
