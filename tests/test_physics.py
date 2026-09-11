@@ -48,14 +48,31 @@ def test_waveform_schedule_is_bounded_and_resets():
 
 
 def test_sine_sweep_uses_twenty_steps_per_cycle_and_resets():
-    profile = sweep_profile(1.0, amplitude_frac=0.012)
+    profile = sweep_profile(0.5, amplitude_frac=0.012)
     events = build_event_schedule(profile)
-    first_cycle = [event for event in events if event.time_s < profile.t_start_s + 1.0]
+    first_cycle = [
+        event
+        for event in events
+        if event.time_s < profile.t_start_s + 1.0 / profile.frequency_hz
+    ]
     assert profile.kind == "sine"
     assert len(first_cycle) == 20
     assert max(abs(event.relative_delta) for event in events) <= 0.012 + 1e-12
     assert events[-1].time_s == profile.t_end_s
     assert events[-1].relative_delta == 0.0
+
+
+def test_high_frequency_sine_clamps_to_safe_event_spacing():
+    profile = sweep_profile(1.5, amplitude_frac=0.012)
+    events = build_event_schedule(profile)
+    spacing = np.diff([event.time_s for event in events])
+    assert spacing.min() >= 0.1 - 1e-9
+    first_cycle = [
+        event
+        for event in events
+        if event.time_s < profile.t_start_s + 1.0 / profile.frequency_hz
+    ]
+    assert len(first_cycle) < 20
 
 
 def test_sampled_profiles_are_deterministic():

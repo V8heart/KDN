@@ -44,11 +44,13 @@ def build_event_schedule(profile: AttackProfile, *, min_interval_s: float = 0.1)
     elif profile.kind == "sine":
         if profile.frequency_hz is None:
             raise ValueError("sine profiles require frequency_hz")
-        # Replay one sinusoidal period as 20 zero-order-hold steps. At the
-        # 1.5 Hz sweep ceiling this is 0.033 s, matching the 30 Hz TDS step.
-        # Convergence failures from frequent changes are retained as results.
+        # Replay one sinusoidal period as about 20 zero-order-hold steps.
+        # Prioritize solver stability over waveform resolution: at higher
+        # frequencies the 0.1 s floor intentionally reduces steps/cycle.
         steps_per_cycle = 20
         step_s = 1.0 / (profile.frequency_hz * steps_per_cycle)
+        if step_s < min_interval_s:
+            step_s = min_interval_s
         t = start
         while t < end - 1e-9:
             phase = 2.0 * np.pi * profile.frequency_hz * (t - start)

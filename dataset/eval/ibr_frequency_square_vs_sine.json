@@ -29,10 +29,10 @@
     "sine": {
       "0.00": {
         "runs": 15,
-        "converged": 6,
-        "osc_std_min": 8.260466093455413e-05,
-        "osc_std_max": 0.0001915502781908,
-        "peak_frequency_hz": 0.8
+        "converged": 7,
+        "osc_std_min": 7.937829034674412e-05,
+        "osc_std_max": 0.0003887742608921,
+        "peak_frequency_hz": 1.0
       },
       "0.30": {
         "runs": 15,
