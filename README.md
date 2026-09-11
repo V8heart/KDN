@@ -180,6 +180,14 @@ python -m bit2watt_impl.physics.ibr_frequency_sweep
 `ibr_frequency_2d_sweep.csv`, heatmap/overlay PNG, summary JSON.
 고침투율에서 PQ 공격 TDS가 실패하면 해당 칸은 `converged=false`로 남긴다.
 
+공간도(지리 좌표 없음 → 선로 그래프 spring layout):
+
+```bash
+python -m bit2watt_impl.physics.plot_wecc_ibr_map
+# → dataset/eval/wecc_ibr_topology_map.png
+# → dataset/eval/wecc_ibr_replacement_order.png
+```
+
 ### §8 연구 실험 모드 (고정 시나리오 + 스윕)
 
 사전 정의 AttackProfile / 주파수 스윕을 배치로 돌린 뒤, cyber 결과와

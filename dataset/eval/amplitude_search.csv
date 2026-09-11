@@ -1,0 +1,5 @@
+target_penetration,max_stable_amplitude,probe_frequency_hz,criteria,note,common_amplitude,fairness_note
+0.0,0.012,0.5,0,verified_with_full_2d,0.012,Relative penetration comparisons remain valid only when the same common_amplitude is used for every included penetration.
+0.3,0.012,0.5,0,verified_with_full_2d,0.012,Relative penetration comparisons remain valid only when the same common_amplitude is used for every included penetration.
+0.5,0.012,0.5,0,verified_with_full_2d_after_TDS.init_harness_fix,0.012,Relative penetration comparisons remain valid only when the same common_amplitude is used for every included penetration.
+0.7,,0.5,0,excluded_invalid_operating_point_idle_tds_fail,0.012,Relative penetration comparisons remain valid only when the same common_amplitude is used for every included penetration.

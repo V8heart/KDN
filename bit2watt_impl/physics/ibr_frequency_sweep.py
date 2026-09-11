@@ -35,12 +35,38 @@ def _builder(penetration: float) -> Callable[[], Any]:
     return _build
 
 
-def load_viable_penetrations(baseline_csv: Path) -> list[float]:
+def load_viable_penetrations(
+    baseline_csv: Path,
+) -> tuple[list[float], list[dict[str, Any]]]:
+    """Return (valid pens, excluded records with reasons)."""
     frame = pd.read_csv(baseline_csv)
-    viable = frame[frame["pflow_ok"].astype(bool) & frame["tds_ok"].astype(bool)]
+    excluded: list[dict[str, Any]] = []
+    if "valid_operating_point" in frame.columns:
+        valid_mask = frame["valid_operating_point"].fillna(False).astype(bool)
+    else:
+        # Backward compatible fallback for older baseline CSVs.
+        valid_mask = frame["pflow_ok"].astype(bool) & frame["tds_ok"].astype(bool)
+    for _, row in frame.iterrows():
+        if bool(valid_mask.loc[row.name]):
+            continue
+        excluded.append(
+            {
+                "target_penetration": float(row["target_penetration"]),
+                "reason": str(
+                    row.get("excluded_reason")
+                    or row.get("failure_reason")
+                    or "not_valid_operating_point"
+                ),
+                "f_hz": (None if pd.isna(row.get("f_hz")) else float(row.get("f_hz"))),
+                "pflow_ok": bool(row.get("pflow_ok")),
+                "tds_ok": bool(row.get("tds_ok")),
+            }
+        )
+    viable = frame.loc[valid_mask]
     if viable.empty:
-        raise RuntimeError(f"no viable penetrations in {baseline_csv}")
-    return [float(x) for x in viable["target_penetration"].tolist()]
+        raise RuntimeError(f"no valid operating-point penetrations in {baseline_csv}")
+    pens = [float(x) for x in viable["target_penetration"].tolist()]
+    return pens, excluded
 
 
 def run_2d_sweep(
@@ -51,23 +77,17 @@ def run_2d_sweep(
     heatmap: Path,
     overlay: Path,
     summary: Path,
-    amplitude_frac: float = 0.02,
+    amplitude_frac: float = 0.012,
     duration_s: float = 14.0,
     max_chunk_s: float = 0.5,
+    criteria: int = 0,
+    excluded_penetrations: list[dict[str, Any]] | None = None,
 ) -> pd.DataFrame:
     rows: list[dict] = []
-    if output.exists():
-        prior = pd.read_csv(output)
-        rows = prior.to_dict(orient="records")
-        done = {
-            (round(float(r["target_penetration"]), 6), round(float(r["frequency_hz"]), 6))
-            for r in rows
-        }
-    else:
-        done = set()
+    # Fresh runs only — schema/metrics changed (rocof_rms etc.).
+    done: set[tuple[float, float]] = set()
 
     for pen in penetrations:
-        # Capture IBR meta once per penetration from a fresh build.
         probe = build_wecc_system_at_penetration(pen, require_pflow=True)
         meta = dict(getattr(probe, "_gridpulse_ibr_meta", {}) or {})
         del probe
@@ -75,7 +95,6 @@ def run_2d_sweep(
         for frequency in frequencies:
             key = (round(float(pen), 6), round(float(frequency), 6))
             if key in done:
-                print(f"[IBR 2D] skip existing {pen:.0%} @ {frequency:.2f} Hz")
                 continue
             profile = sweep_profile(
                 float(frequency),
@@ -89,6 +108,7 @@ def run_2d_sweep(
                 model_name="GENCLS",
                 max_chunk_s=max_chunk_s,
                 pq_selection="largest_p0",
+                criteria=criteria,
             )
             row = dict(result.row)
             row["target_penetration"] = float(pen)
@@ -103,14 +123,22 @@ def run_2d_sweep(
             status = "ok" if row.get("converged") else row.get("failure_reason")
             print(
                 f"[IBR 2D] {pen:.0%} @ {frequency:.2f} Hz: {status} "
-                f"osc_std={row.get('osc_std')} rocof={row.get('rocof_hz_s')}"
+                f"osc_std={row.get('osc_std')} "
+                f"rocof_rms={row.get('rocof_rms_hz_s')} "
+                f"rocof_max={row.get('rocof_max_hz_s')}"
             )
 
     frame = pd.DataFrame(rows)
     ensure_parent(output)
     frame.to_csv(output, index=False)
     _write_plots(frame, heatmap=heatmap, overlay=overlay)
-    report = _summary_report(frame, penetrations=penetrations)
+    report = _summary_report(
+        frame,
+        penetrations=penetrations,
+        amplitude_frac=amplitude_frac,
+        criteria=criteria,
+        excluded_penetrations=excluded_penetrations or [],
+    )
     ensure_parent(summary)
     summary.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps(report, ensure_ascii=False, indent=2))
@@ -185,22 +213,37 @@ def _write_plots(frame: pd.DataFrame, *, heatmap: Path, overlay: Path) -> None:
     plt.close(fig)
 
 
-def _summary_report(frame: pd.DataFrame, *, penetrations: list[float]) -> dict[str, Any]:
+def _summary_report(
+    frame: pd.DataFrame,
+    *,
+    penetrations: list[float],
+    amplitude_frac: float,
+    criteria: int,
+    excluded_penetrations: list[dict[str, Any]],
+) -> dict[str, Any]:
     report: dict[str, Any] = {
         "test_system": "wecc_179_gencls",
         "scope": "public dynamic test system; not a real regional grid",
         "method": "capacity-ranked GENCLS→REGCA1+REECA1 replacement; PQ.Ppf square-wave injection",
+        "amplitude_frac": float(amplitude_frac),
+        "tds_criteria": int(criteria),
         "amplitude_frac_note": (
-            "Default attack amplitude is 0.02 (not 0.10): on this public WECC+REGCA1 case, "
-            "±10% PQ.Ppf square waves routinely bust TDS after SG→IBR replacement."
+            "Identical amplitude_frac is used across penetrations so relative "
+            "comparisons remain valid even when absolute responses shrink. "
+            "Primary RoCoF evidence uses rocof_rms_hz_s (transition-masked); "
+            "rocof_max_hz_s / legacy rocof_hz_s is diagnostic only for square-wave edges."
         ),
         "penetrations_requested": penetrations,
+        "excluded_penetrations": excluded_penetrations,
         "runs": int(len(frame)),
         "converged": int(frame["converged"].fillna(False).sum()) if len(frame) else 0,
         "by_penetration": {},
         "penetration_vs_mean_osc_std": {},
+        "penetration_vs_mean_rocof_rms_hz_s": {},
         "spearman_penetration_osc_std": None,
+        "spearman_penetration_rocof_rms": None,
         "response_increases_with_penetration": None,
+        "rocof_rms_increases_with_penetration": None,
         "interpretation": "insufficient data",
     }
     if frame.empty:
@@ -211,11 +254,23 @@ def _summary_report(frame: pd.DataFrame, *, penetrations: list[float]) -> dict[s
 
     for pen, group in frame.groupby("target_penetration"):
         g_ok = group[group["converged"].fillna(False)]
+        mean_rms = None
+        mean_max = None
+        if len(g_ok):
+            if "rocof_rms_hz_s" in g_ok and g_ok["rocof_rms_hz_s"].notna().any():
+                mean_rms = float(g_ok["rocof_rms_hz_s"].mean(skipna=True))
+            if "rocof_max_hz_s" in g_ok and g_ok["rocof_max_hz_s"].notna().any():
+                mean_max = float(g_ok["rocof_max_hz_s"].mean(skipna=True))
+            elif "rocof_hz_s" in g_ok and g_ok["rocof_hz_s"].notna().any():
+                mean_max = float(g_ok["rocof_hz_s"].mean(skipna=True))
         report["by_penetration"][f"{float(pen):.2f}"] = {
             "runs": int(len(group)),
             "converged": int(len(g_ok)),
             "mean_osc_std": float(g_ok["osc_std"].mean()) if len(g_ok) else None,
-            "mean_rocof_hz_s": float(g_ok["rocof_hz_s"].mean()) if len(g_ok) else None,
+            "mean_rocof_rms_hz_s": mean_rms,
+            "mean_rocof_max_hz_s": mean_max,
+            # Legacy key retained but documented as max/diagnostic.
+            "mean_rocof_hz_s": mean_max,
             "inertia_after": (
                 float(g_ok["inertia_after"].iloc[0])
                 if len(g_ok) and "inertia_after" in g_ok
@@ -226,17 +281,26 @@ def _summary_report(frame: pd.DataFrame, *, penetrations: list[float]) -> dict[s
             report["penetration_vs_mean_osc_std"][f"{float(pen):.2f}"] = float(
                 g_ok["osc_std"].mean()
             )
+            if mean_rms is not None:
+                report["penetration_vs_mean_rocof_rms_hz_s"][f"{float(pen):.2f}"] = mean_rms
 
-    # Per-frequency paired trend: mean slope of osc_std vs penetration
     if not ok.empty and ok["target_penetration"].nunique() >= 2:
-        slopes: list[float] = []
-        for _, grp in ok.groupby("frequency_hz"):
-            if grp["target_penetration"].nunique() < 2:
-                continue
-            x = grp["target_penetration"].to_numpy(dtype=float)
-            y = grp["osc_std"].to_numpy(dtype=float)
-            if np.all(np.isfinite(x)) and np.all(np.isfinite(y)) and len(x) >= 2:
-                slopes.append(float(np.polyfit(x, y, 1)[0]))
+        def _slopes(metric: str) -> list[float]:
+            out: list[float] = []
+            if metric not in ok.columns:
+                return out
+            for _, grp in ok.groupby("frequency_hz"):
+                sub = grp.dropna(subset=[metric])
+                if sub["target_penetration"].nunique() < 2:
+                    continue
+                x = sub["target_penetration"].to_numpy(dtype=float)
+                y = sub[metric].to_numpy(dtype=float)
+                if np.all(np.isfinite(x)) and np.all(np.isfinite(y)) and len(x) >= 2:
+                    out.append(float(np.polyfit(x, y, 1)[0]))
+            return out
+
+        osc_slopes = _slopes("osc_std")
+        rms_slopes = _slopes("rocof_rms_hz_s")
         n_levels = int(ok["target_penetration"].nunique())
         report["comparable_penetration_levels"] = n_levels
         failed_pens = sorted(
@@ -247,55 +311,83 @@ def _summary_report(frame: pd.DataFrame, *, penetrations: list[float]) -> dict[s
             }
         )
         report["attack_tds_failed_penetrations"] = failed_pens
-        if slopes:
-            mean_slope = float(np.mean(slopes))
-            report["mean_osc_std_vs_penetration_slope"] = mean_slope
-            report["response_increases_with_penetration"] = bool(mean_slope > 0)
-            try:
-                from scipy.stats import spearmanr
 
-                agg = (
-                    ok.groupby("target_penetration")["osc_std"]
+        try:
+            from scipy.stats import spearmanr
+
+            agg = ok.groupby("target_penetration")["osc_std"].mean().reset_index()
+            if len(agg) >= 3:
+                rho, pvalue = spearmanr(agg["target_penetration"], agg["osc_std"])
+                report["spearman_penetration_osc_std"] = {
+                    "n": int(len(agg)),
+                    "rho": float(rho) if np.isfinite(rho) else None,
+                    "pvalue": float(pvalue) if np.isfinite(pvalue) else None,
+                }
+            if "rocof_rms_hz_s" in ok.columns:
+                agg_r = (
+                    ok.dropna(subset=["rocof_rms_hz_s"])
+                    .groupby("target_penetration")["rocof_rms_hz_s"]
                     .mean()
                     .reset_index()
                 )
-                if len(agg) >= 3:
-                    rho, pvalue = spearmanr(agg["target_penetration"], agg["osc_std"])
-                    report["spearman_penetration_osc_std"] = {
-                        "n": int(len(agg)),
+                if len(agg_r) >= 3:
+                    rho, pvalue = spearmanr(
+                        agg_r["target_penetration"], agg_r["rocof_rms_hz_s"]
+                    )
+                    report["spearman_penetration_rocof_rms"] = {
+                        "n": int(len(agg_r)),
                         "rho": float(rho) if np.isfinite(rho) else None,
                         "pvalue": float(pvalue) if np.isfinite(pvalue) else None,
                     }
-            except Exception:
-                pass
+        except Exception:
+            pass
 
-            fail_note = ""
-            if failed_pens:
-                fail_note = (
-                    f" Attack-TDS failed for target penetrations {failed_pens} "
-                    "(idle baseline may still have passed); those levels are excluded "
-                    "from the response trend."
-                )
-            if n_levels < 3:
-                report["interpretation"] = (
-                    f"Only {n_levels} IBR levels produced converged attack runs on this "
-                    "public WECC case, so the penetration trend is descriptive only "
-                    f"(mean osc_std slope={'positive' if mean_slope > 0 else 'non-positive'})."
-                    + fail_note
-                )
-            elif report["response_increases_with_penetration"]:
-                report["interpretation"] = (
-                    "On this public WECC case, mean remaining-GENCLS osc_std tended to "
-                    "increase with IBR penetration for the tested square-wave PQ injections."
-                    + fail_note
-                )
-            else:
-                report["interpretation"] = (
-                    "On this public WECC case, mean remaining-GENCLS osc_std did not "
-                    "increase with IBR penetration for the tested square-wave PQ injections; "
-                    "report the measured trend without claiming inverter-dominated risk."
-                    + fail_note
-                )
+        notes = []
+        if excluded_penetrations:
+            notes.append(
+                f"Excluded before sweep (invalid operating point): {excluded_penetrations}."
+            )
+        if failed_pens:
+            notes.append(
+                f"Attack-TDS failed penetrations {failed_pens} "
+                "(distinct from operating-point exclusion)."
+            )
+        note = (" " + " ".join(notes)) if notes else ""
+
+        if osc_slopes:
+            mean_slope = float(np.mean(osc_slopes))
+            report["mean_osc_std_vs_penetration_slope"] = mean_slope
+            report["response_increases_with_penetration"] = bool(mean_slope > 0)
+        if rms_slopes:
+            mean_rms_slope = float(np.mean(rms_slopes))
+            report["mean_rocof_rms_vs_penetration_slope"] = mean_rms_slope
+            report["rocof_rms_increases_with_penetration"] = bool(mean_rms_slope > 0)
+
+        if n_levels < 3:
+            report["interpretation"] = (
+                f"Only {n_levels} IBR levels produced converged attack runs on this "
+                "public WECC case; trend is descriptive_only."
+                + note
+            )
+            report["inference_status"] = "descriptive_only"
+        else:
+            report["inference_status"] = "candidate_for_validation"
+            osc_bit = (
+                "osc_std increased with penetration"
+                if report.get("response_increases_with_penetration")
+                else "osc_std did not increase with penetration"
+            )
+            rms_bit = (
+                "rocof_rms increased with penetration"
+                if report.get("rocof_rms_increases_with_penetration")
+                else "rocof_rms did not increase with penetration"
+            )
+            report["interpretation"] = (
+                f"On this public WECC case with identical amplitude_frac={amplitude_frac}, "
+                f"{osc_bit}; {rms_bit}. Do not use rocof_max/legacy rocof_hz_s as "
+                f"frequency-resolved evidence."
+                + note
+            )
     return report
 
 
@@ -334,8 +426,14 @@ def main() -> None:
     parser.add_argument(
         "--amplitude-frac",
         type=float,
-        default=0.02,
-        help="PQ relative amplitude (0.10 is often unstable after IBR replacement on WECC)",
+        default=0.012,
+        help="Common PQ relative amplitude across penetrations (fair comparison)",
+    )
+    parser.add_argument(
+        "--criteria",
+        type=int,
+        default=0,
+        help="ANDES TDS criteria flag (0 recommended for WECC+IBR attack sweeps)",
     )
     parser.add_argument("--duration-s", type=float, default=14.0)
     parser.add_argument(
@@ -343,14 +441,18 @@ def main() -> None:
         type=float,
         nargs="*",
         default=None,
-        help="Override baseline-viable list",
+        help="Override baseline-valid list",
     )
     args = parser.parse_args()
+    excluded: list[dict[str, Any]] = []
     if args.penetrations:
         pens = [float(x) for x in args.penetrations]
     else:
-        pens = load_viable_penetrations(args.baseline)
+        pens, excluded = load_viable_penetrations(args.baseline)
     freqs = np.arange(args.start, args.stop + 1e-9, args.step)
+    # Remove stale CSV so schema/metrics are not mixed with prior runs.
+    if args.output.exists():
+        args.output.unlink()
     run_2d_sweep(
         penetrations=pens,
         frequencies=freqs,
@@ -360,6 +462,8 @@ def main() -> None:
         summary=args.summary,
         amplitude_frac=args.amplitude_frac,
         duration_s=args.duration_s,
+        criteria=args.criteria,
+        excluded_penetrations=excluded,
     )
 
 

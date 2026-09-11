@@ -2,57 +2,81 @@
   "test_system": "wecc_179_gencls",
   "scope": "public dynamic test system; not a real regional grid",
   "method": "capacity-ranked GENCLS→REGCA1+REECA1 replacement; PQ.Ppf square-wave injection",
-  "amplitude_frac_note": "Default attack amplitude is 0.02 (not 0.10): on this public WECC+REGCA1 case, ±10% PQ.Ppf square waves routinely bust TDS after SG→IBR replacement.",
+  "amplitude_frac": 0.012,
+  "tds_criteria": 0,
+  "amplitude_frac_note": "Identical amplitude_frac is used across penetrations so relative comparisons remain valid even when absolute responses shrink. Primary RoCoF evidence uses rocof_rms_hz_s (transition-masked); rocof_max_hz_s / legacy rocof_hz_s is diagnostic only for square-wave edges.",
   "penetrations_requested": [
     0.0,
     0.3,
-    0.5,
-    0.7
+    0.5
   ],
-  "runs": 60,
-  "converged": 30,
+  "excluded_penetrations": [
+    {
+      "target_penetration": 0.7,
+      "reason": "idle_tds_failed:TDS entered busted state; fresh replay required",
+      "f_hz": null,
+      "pflow_ok": true,
+      "tds_ok": false
+    }
+  ],
+  "runs": 45,
+  "converged": 45,
   "by_penetration": {
     "0.00": {
       "runs": 15,
       "converged": 15,
-      "mean_osc_std": 0.0003744503373818533,
-      "mean_rocof_hz_s": 0.23820126174373255,
+      "mean_osc_std": 0.00022470781992407334,
+      "mean_rocof_rms_hz_s": 0.07395119388656156,
+      "mean_rocof_max_hz_s": 0.13421135223568115,
+      "mean_rocof_hz_s": 0.13421135223568115,
       "inertia_after": 8375.75
     },
     "0.30": {
       "runs": 15,
       "converged": 15,
-      "mean_osc_std": 0.0005467255383879867,
-      "mean_rocof_hz_s": 0.51489954890679,
+      "mean_osc_std": 0.00045578319384271675,
+      "mean_rocof_rms_hz_s": 0.10791042646503073,
+      "mean_rocof_max_hz_s": 0.35610454283795434,
+      "mean_rocof_hz_s": 0.35610454283795434,
       "inertia_after": 5697.39
     },
     "0.50": {
       "runs": 15,
-      "converged": 0,
-      "mean_osc_std": null,
-      "mean_rocof_hz_s": null,
-      "inertia_after": null
-    },
-    "0.70": {
-      "runs": 15,
-      "converged": 0,
-      "mean_osc_std": null,
-      "mean_rocof_hz_s": null,
-      "inertia_after": null
+      "converged": 15,
+      "mean_osc_std": 0.0013541813878503164,
+      "mean_rocof_rms_hz_s": 0.7972380880008033,
+      "mean_rocof_max_hz_s": 3.895100575059378,
+      "mean_rocof_hz_s": 3.895100575059378,
+      "inertia_after": 4036.7500000000005
     }
   },
   "penetration_vs_mean_osc_std": {
-    "0.00": 0.0003744503373818533,
-    "0.30": 0.0005467255383879867
+    "0.00": 0.00022470781992407334,
+    "0.30": 0.00045578319384271675,
+    "0.50": 0.0013541813878503164
   },
-  "spearman_penetration_osc_std": null,
+  "penetration_vs_mean_rocof_rms_hz_s": {
+    "0.00": 0.07395119388656156,
+    "0.30": 0.10791042646503073,
+    "0.50": 0.7972380880008033
+  },
+  "spearman_penetration_osc_std": {
+    "n": 3,
+    "rho": 1.0,
+    "pvalue": 0.0
+  },
+  "spearman_penetration_rocof_rms": {
+    "n": 3,
+    "rho": 1.0,
+    "pvalue": 0.0
+  },
   "response_increases_with_penetration": true,
-  "interpretation": "Only 2 IBR levels produced converged attack runs on this public WECC case, so the penetration trend is descriptive only (mean osc_std slope=positive). Attack-TDS failed for target penetrations [0.5, 0.7] (idle baseline may still have passed); those levels are excluded from the response trend.",
-  "convergence_rate": 0.5,
-  "comparable_penetration_levels": 2,
-  "attack_tds_failed_penetrations": [
-    0.5,
-    0.7
-  ],
-  "mean_osc_std_vs_penetration_slope": 0.0005742506700204442
+  "rocof_rms_increases_with_penetration": true,
+  "interpretation": "On this public WECC case with identical amplitude_frac=0.012, osc_std increased with penetration; rocof_rms increased with penetration. Do not use rocof_max/legacy rocof_hz_s as frequency-resolved evidence. Excluded before sweep (invalid operating point): [{'target_penetration': 0.7, 'reason': 'idle_tds_failed:TDS entered busted state; fresh replay required', 'f_hz': None, 'pflow_ok': True, 'tds_ok': False}].",
+  "convergence_rate": 1.0,
+  "comparable_penetration_levels": 3,
+  "attack_tds_failed_penetrations": [],
+  "mean_osc_std_vs_penetration_slope": 0.002141418513000617,
+  "mean_rocof_rms_vs_penetration_slope": 1.3413072345732004,
+  "inference_status": "candidate_for_validation"
 }

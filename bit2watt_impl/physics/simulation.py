@@ -106,7 +106,20 @@ def build_wecc_system_at_penetration(
 
 
 def current_time(ss: Any) -> float:
-    return float(getattr(ss.dae, "t", 0.0) or 0.0)
+    """Return simulation clock in seconds.
+
+    Fresh ANDES systems report ``dae.t == -1`` before the first successful TDS
+    step. Treat non-positive clocks as 0 so ``run_to`` does not emit negative
+    segment targets (e.g. -0.5) that waste a retry.
+    """
+    raw = getattr(ss.dae, "t", 0.0)
+    try:
+        value = float(np.asarray(raw).reshape(-1)[0])
+    except Exception:
+        value = 0.0
+    if not np.isfinite(value) or value < 0.0:
+        return 0.0
+    return value
 
 
 def select_pq_idx(
@@ -149,10 +162,16 @@ def run_to(
     chunk = max_chunk_s
     retries = 0
     tolerance = 1e-7
+    target_s = float(target_s)
+    if target_s <= 0:
+        return True, records, ""
 
     while current_time(ss) < target_s - tolerance:
         before = current_time(ss)
         segment_target = min(before + chunk, target_s)
+        if segment_target <= before + tolerance:
+            # Clock already at/above target after clamping; nothing to do.
+            break
         ss.TDS.config.tf = segment_target
         try:
             returned = ss.TDS.run()
@@ -207,6 +226,8 @@ def _extract_omega(
     t_start_s: float,
     t_end_s: float,
     forcing_frequency_hz: float | None,
+    toggle_times_s: list[float] | None = None,
+    transition_mask_s: float = 0.15,
 ) -> dict[str, Any]:
     model = getattr(ss, model_name)
     frame = ss.TDS.get_timeseries(model.omega)
@@ -229,7 +250,33 @@ def _extract_omega(
     selected = omega[:, response_col]
     nominal_hz = float(getattr(ss.config, "freq", 60.0))
     gradient = np.gradient(omega, times, axis=0)
-    rocof = float(np.nanmax(np.abs(gradient)) * nominal_hz)
+    selected_grad = gradient[:, response_col]
+    # Legacy max metric: sensitive to square-wave edges; keep for diagnostics.
+    rocof_max = float(np.nanmax(np.abs(selected_grad)) * nominal_hz)
+
+    toggles = list(toggle_times_s or [])
+    rocof_rms: float | None
+    rocof_p95: float | None
+    rocof_status: str
+    if not toggles:
+        # Ops / non-periodic path: no schedule to mask.
+        rocof_rms = None
+        rocof_p95 = None
+        rocof_status = "no_toggle_mask"
+    else:
+        keep = np.ones(len(times), dtype=bool)
+        for t_toggle in toggles:
+            keep &= np.abs(times - float(t_toggle)) > float(transition_mask_s)
+        masked_grad = selected_grad[keep]
+        masked_grad = masked_grad[np.isfinite(masked_grad)]
+        if masked_grad.size < 30:
+            rocof_rms = None
+            rocof_p95 = None
+            rocof_status = "insufficient_samples_after_transition_mask"
+        else:
+            rocof_rms = float(np.sqrt(np.mean(masked_grad**2)) * nominal_hz)
+            rocof_p95 = float(np.nanpercentile(np.abs(masked_grad), 95) * nominal_hz)
+            rocof_status = "ok"
 
     dt = float(np.median(np.diff(times)))
     uniform_times = np.arange(times[0], times[-1], dt)
@@ -245,7 +292,12 @@ def _extract_omega(
     generator_indices = list(model.idx.v)
 
     return {
-        "rocof_hz_s": rocof,
+        # Alias kept one cycle for older CSV/summary consumers.
+        "rocof_hz_s": rocof_max,
+        "rocof_max_hz_s": rocof_max,
+        "rocof_rms_hz_s": rocof_rms,
+        "rocof_p95_hz_s": rocof_p95,
+        "rocof_status": rocof_status,
         "osc_std": float(np.nanmax(std_by_generator)),
         "osc_ptp": float(np.nanmax(np.ptp(omega, axis=0))),
         "dominant_freq_hz": dominant,
@@ -273,12 +325,18 @@ def _run_once(
     ss.TDS.config.tstep = tstep_s
     ss.TDS.config.shrinkt = 1
     ss.TDS.config.max_iter = max(30, int(ss.TDS.config.max_iter))
+    # Initialize TDS after config so dae.t starts at 0 (not -1) and REGCA
+    # algebraic states are consistent before the first chunked run_to.
+    if hasattr(ss.TDS, "init"):
+        ss.TDS.init()
     selected_pq = select_pq_idx(ss, pq_idx, strategy=pq_selection)
     p0 = float(ss.PQ.get(src="p0", idx=selected_pq, attr="v"))
     pq_bus = str(ss.PQ.get(src="bus", idx=selected_pq, attr="v"))
     all_records: list[dict[str, Any]] = []
+    schedule = build_event_schedule(profile)
+    toggle_times = [float(event.time_s) for event in schedule]
 
-    for segment_index, event in enumerate(build_event_schedule(profile)):
+    for segment_index, event in enumerate(schedule):
         ok, records, reason = run_to(ss, event.time_s, max_chunk_s=max_chunk_s)
         for record in records:
             item = asdict(record)
@@ -312,7 +370,7 @@ def _run_once(
     ok, records, reason = run_to(ss, final_target, max_chunk_s=max_chunk_s)
     for record in records:
         item = asdict(record)
-        item.update({"segment_index": len(build_event_schedule(profile)), "attack_id": profile.attack_id})
+        item.update({"segment_index": len(schedule), "attack_id": profile.attack_id})
         all_records.append(item)
     base = {
         **profile.to_dict(),
@@ -332,15 +390,19 @@ def _run_once(
         "t_reached_s": current_time(ss),
     }
     if ok:
-        base.update(
-            _extract_omega(
-                ss,
-                model_name=model_name,
-                t_start_s=max(profile.t_start_s + 1.0, 2.0),
-                t_end_s=final_target,
-                forcing_frequency_hz=profile.frequency_hz,
-            )
+        features = _extract_omega(
+            ss,
+            model_name=model_name,
+            t_start_s=max(profile.t_start_s + 1.0, 2.0),
+            t_end_s=final_target,
+            forcing_frequency_hz=profile.frequency_hz,
+            toggle_times_s=toggle_times,
         )
+        base.update(features)
+        if features.get("rocof_status") == "insufficient_samples_after_transition_mask":
+            # TDS succeeded; keep converged=True but surface RoCoF gap.
+            if not base.get("failure_reason"):
+                base["failure_reason"] = "insufficient_samples_after_transition_mask"
     return SimulationResult(row=base, convergence=all_records)
 
 
@@ -357,20 +419,26 @@ def simulate_profile(
     pq_selection: str = "first",
     base_tstep_s: float = 1.0 / 30.0,
 ) -> SimulationResult:
-    """Run a profile, rebuilding and replaying from t=0 after busted failures."""
+    """Run a profile, rebuilding and replaying from t=0 after busted failures.
+
+    Rebuild 0 keeps the requested step/chunk. Later rebuilds may shrink them.
+    Shrinking on the first attempt was observed to make WECC+IBR cases fail
+    *before* the attack start time after an earlier post-toggle bust.
+    """
     combined_logs: list[dict[str, Any]] = []
     last: SimulationResult | None = None
     for rebuild in range(max_rebuilds + 1):
+        shrink = 2 ** max(rebuild - 1, 0) if rebuild > 0 else 1
         result = _run_once(
             builder,
             profile,
             test_system=test_system,
             model_name=model_name,
             pq_idx=pq_idx,
-            max_chunk_s=max_chunk_s / (2**rebuild),
+            max_chunk_s=max_chunk_s / shrink,
             criteria=criteria,
             pq_selection=pq_selection,
-            tstep_s=base_tstep_s / (2**rebuild),
+            tstep_s=base_tstep_s / shrink,
         )
         for item in result.convergence:
             item["rebuild"] = rebuild
@@ -495,6 +563,8 @@ def inject_observed_waveform(
     ss.TDS.config.tstep = 1.0 / 30.0
     ss.TDS.config.shrinkt = 1
     ss.TDS.config.max_iter = max(30, int(ss.TDS.config.max_iter))
+    if hasattr(ss.TDS, "init"):
+        ss.TDS.init()
     selected_pq = select_pq_idx(ss, strategy=pq_selection)
     p0 = float(ss.PQ.get(src="p0", idx=selected_pq, attr="v"))
     pq_bus = str(ss.PQ.get(src="bus", idx=selected_pq, attr="v"))
@@ -514,6 +584,10 @@ def inject_observed_waveform(
                 "t_reached_s": current_time(ss),
                 "osc_std": None,
                 "rocof_hz_s": None,
+                "rocof_max_hz_s": None,
+                "rocof_rms_hz_s": None,
+                "rocof_p95_hz_s": None,
+                "rocof_status": "tds_failed",
                 "dominant_freq_hz": None,
                 "osc_ptp": None,
                 **{f"waveform_{k}": v for k, v in meta.items()},
@@ -526,6 +600,7 @@ def inject_observed_waveform(
         t_start_s=meta["t_start_s"],
         t_end_s=meta["t_end_s"] + 2.0,
         forcing_frequency_hz=None,
+        toggle_times_s=[],
     )
     return {
         "test_system": test_system,
@@ -579,6 +654,10 @@ def inject_observed_waveform_with_timeout(
             "failure_reason": str(exc),
             "osc_std": None,
             "rocof_hz_s": None,
+            "rocof_max_hz_s": None,
+            "rocof_rms_hz_s": None,
+            "rocof_p95_hz_s": None,
+            "rocof_status": "timeout",
             "dominant_freq_hz": None,
             "osc_ptp": None,
         }
@@ -590,6 +669,10 @@ def inject_observed_waveform_with_timeout(
             "failure_reason": f"{type(exc).__name__}: {exc}",
             "osc_std": None,
             "rocof_hz_s": None,
+            "rocof_max_hz_s": None,
+            "rocof_rms_hz_s": None,
+            "rocof_p95_hz_s": None,
+            "rocof_status": "error",
             "dominant_freq_hz": None,
             "osc_ptp": None,
         }
